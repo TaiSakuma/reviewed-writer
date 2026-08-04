@@ -1,0 +1,12 @@
+{
+  "name": "reviewed-writer",
+  "description": "Marketplace hosting the reviewed-writer plugin",
+  "owner": { "name": "Tai Sakuma" },
+  "plugins": [
+    {
+      "name": "reviewed-writer",
+      "source": "./",
+      "description": "Persona-panel authoring and review workflow with Diátaxis declarations"
+    }
+  ]
+}
