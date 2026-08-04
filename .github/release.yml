@@ -1,0 +1,39 @@
+changelog:
+  exclude:
+    authors:
+      - dependabot
+      - dependabot[bot]
+  categories:
+    - title: Breaking Changes
+      labels:
+        - breaking
+    - title: Features
+      labels:
+        - feature
+    - title: Bug Fixes
+      labels:
+        - fix
+    - title: Performance
+      labels:
+        - performance
+    - title: Documentation
+      labels:
+        - documentation
+    - title: Refactoring
+      labels:
+        - refactor
+        - style
+    - title: Testing
+      labels:
+        - test
+    - title: Build & CI
+      labels:
+        - build
+        - ci
+        - chore
+    - title: Reverted
+      labels:
+        - revert
+    - title: Other
+      labels:
+        - "*"

@@ -68,6 +68,14 @@ Releases are tagged `v<version>`, and `plugin.json` carries the matching semver
 version. A consuming repository pins the marketplace source to a release tag;
 upgrading is an edit to that pin.
 
+Releases are cut by CI: pushing a `u<version>` trigger tag runs a pipeline that
+generates `CHANGELOG.md` with [git-cliff] from Conventional-Commit PR titles,
+creates the `v<version>` tag, and publishes the GitHub Release. A rolling
+`latest` tag always points at the newest release; a consuming repository may pin
+`"ref": "latest"` to follow releases automatically, at the cost of
+reproducibility. The release runbook and the PR-title convention are in
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Provenance
 
 Extracted from [legendary-octo-happiness] and [hypothesis-awkward], where the
@@ -75,6 +83,7 @@ workflow was converged over five refactoring iterations ([issue #49]).
 
 [Claude Code]: https://claude.com/claude-code
 [Diátaxis]: https://diataxis.fr/
+[git-cliff]: https://git-cliff.org/
 [legendary-octo-happiness]:
   https://github.com/TaiSakuma/legendary-octo-happiness
 [hypothesis-awkward]: https://github.com/scikit-hep/hypothesis-awkward
