@@ -4,5 +4,3 @@ repos:
     hooks:
       - id: prettier
         types: [markdown]
-        # CHANGELOG.md is CI-generated; prettier would rewrap it
-        exclude: ^CHANGELOG\.md$

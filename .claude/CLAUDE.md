@@ -8,17 +8,18 @@ code in this repository.
 A Claude Code plugin (`reviewed-writer`) that authors documents through a panel
 of fixed-persona reviewers, with every unit of content declared in a
 [Diátaxis](https://diataxis.fr/) quadrant. The repository is also its own
-single-plugin marketplace (`.claude-plugin/marketplace.json`). There is no
-build system and there are no tests; everything is markdown, the release
-workflows under `.github/`, and two JSON manifests.
+single-plugin marketplace (`.claude-plugin/marketplace.json`). There is no build
+system and there are no tests; everything is markdown, the release workflows
+under `.github/`, and two JSON manifests.
 
 ## Commands
 
-- `pre-commit run --all-files` — prettier over markdown. `.prettierrc.toml`
-  sets `proseWrap = "always"`, so all markdown prose is hard-wrapped (at 80
-  columns). `CHANGELOG.md` is excluded: CI generates it.
-- CI validates PR titles against Conventional Commits (see
-  `CONTRIBUTING.md`); there are no other checks.
+- `pre-commit run --all-files` — prettier over markdown. `.prettierrc.toml` sets
+  `proseWrap = "always"`, so all markdown prose is hard-wrapped (at 80 columns).
+  `.prettierignore` keeps prettier away from `CHANGELOG.md` (CI generates it)
+  and `.github/` (the PR template must stay single-line).
+- CI runs the same pre-commit check and validates PR titles against Conventional
+  Commits (see `CONTRIBUTING.md`); there are no other checks.
 
 ## Architecture
 
@@ -95,13 +96,13 @@ carries the workflow files, not only `main`'s head:
 2. The Changelog workflow (triggered by the `u` tag) verifies the tag against
    `plugin.json`'s version, creates a `release/<version>` branch at the tagged
    commit, generates `CHANGELOG.md` and the `v` tag on it, then merges the
-   branch back into `main` when the release is on `main`'s line and its
-   history already contains the newest existing release. Otherwise it is a
-   backport: the merge-back is skipped with a warning, the branch is kept, and
-   `main` is untouched.
-3. The Release workflow (triggered via `workflow_run` after Changelog) creates
-   a GitHub Release with GitHub auto-generated notes, marking it latest and
-   moving the `latest` tag only when it is the newest version.
+   branch back into `main` when the release is on `main`'s line and its history
+   already contains the newest existing release. Otherwise it is a backport: the
+   merge-back is skipped with a warning, the branch is kept, and `main` is
+   untouched.
+3. The Release workflow (triggered via `workflow_run` after Changelog) creates a
+   GitHub Release with GitHub auto-generated notes, marking it latest and moving
+   the `latest` tag only when it is the newest version.
 
 The pipeline assumes one release in progress at a time. The full runbook,
 including recovery from a failed run, is in `CONTRIBUTING.md`.

@@ -1,5 +1,19 @@
 # Contributing
 
+## Setup
+
+After cloning, install the [pre-commit](https://pre-commit.com/) hook so the
+checks run at commit time:
+
+```bash
+pre-commit install
+```
+
+The hook runs prettier over markdown (`.prettierignore` keeps it away from
+`CHANGELOG.md` and `.github/`). CI runs the same check on every PR. Run it over
+the whole tree with `pre-commit run --all-files`; note that it only covers files
+tracked by git, so `git add` new files first.
+
 ## PR Title Convention
 
 This project uses [Conventional Commits](https://www.conventionalcommits.org/)
@@ -44,10 +58,10 @@ enforced.
 
 ## Releasing
 
-Releases use a two-tag flow. The `u` tag triggers changelog generation, which
-in turn creates the `v` tag and GitHub Release. The pipeline assumes one
-release in progress at a time: push the next `u` tag only after the previous
-release has appeared.
+Releases use a two-tag flow. The `u` tag triggers changelog generation, which in
+turn creates the `v` tag and GitHub Release. The pipeline assumes one release in
+progress at a time: push the next `u` tag only after the previous release has
+appeared.
 
 ### Steps
 
@@ -90,9 +104,9 @@ release has appeared.
 ### Releasing from an older commit
 
 Check the commit out first (`git switch --detach <commit>`) and release from
-there. The chosen commit must already carry the pipeline's workflow files: a
-tag push runs the workflow files as of the tagged commit, and a tag on a
-commit without them starts no run at all.
+there. The chosen commit must already carry the pipeline's workflow files: a tag
+push runs the workflow files as of the tagged commit, and a tag on a commit
+without them starts no run at all.
 
 ### If the release fails
 
@@ -102,10 +116,15 @@ tag on GitHub (`git push origin --delete u0.2.0`), delete the `release/0.2.0`
 branch if the failed run left one behind
 (`git push origin --delete release/0.2.0`), and, if the failed run had already
 created the `v` tag (visible under the repository's tags), delete that tag too
-(`git push origin --delete v0.2.0`). If the version-check step failed, the
-local bump commit records the wrong version: fix `.claude-plugin/plugin.json`
-(or redo the bump) and move the `u` tag to the corrected commit. Then fix any
-other cause and push the trigger tag again (`git push origin u0.2.0`).
+(`git push origin --delete v0.2.0`). If the version-check step failed, the local
+bump commit records the wrong version: fix `.claude-plugin/plugin.json` (or redo
+the bump) and move the `u` tag to the corrected commit. Then fix any other cause
+and push the trigger tag again (`git push origin u0.2.0`).
+
+If instead the "Release a new version" run fails after a successful changelog
+run (for example, a transient error while creating the GitHub Release), the `v`
+tag and the changelog are already correct: re-run that workflow run from the
+Actions tab; do not delete any tags.
 
 ### After the release
 
