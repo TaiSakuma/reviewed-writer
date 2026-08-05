@@ -1,0 +1,14 @@
+{
+  "enabledPlugins": {
+    "reviewed-writer@reviewed-writer": true
+  },
+  "extraKnownMarketplaces": {
+    "reviewed-writer": {
+      "source": {
+        "source": "github",
+        "repo": "TaiSakuma/reviewed-writer",
+        "ref": "v0.1.1"
+      }
+    }
+  }
+}
