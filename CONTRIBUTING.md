@@ -1,30 +1,45 @@
 # Contributing
 
-## Setup
+Contributors need the Setup and PR Title Convention sections; installing the
+plugin that authors these documents is optional; everything under Releasing is
+the maintainers' runbook.
 
-After cloning, install the [pre-commit](https://pre-commit.com/) hook so the
-checks run at commit time:
+## 🔧 Setup
+
+After cloning, install [pre-commit] itself if the machine does not have it (its
+site covers the ways), then install the hook so the checks run at commit time:
 
 ```bash
 pre-commit install
 ```
 
-The hook runs prettier over markdown (`.prettierignore` keeps it away from
-`CHANGELOG.md` and `.github/`). CI runs the same check on every PR. Run it over
-the whole tree with `pre-commit run --all-files`; note that it only covers files
-tracked by git, so `git add` new files first.
+The hook runs prettier over markdown and rewrites files that fail it: the commit
+aborts, and you `git add` the rewritten files and commit again. Prose is
+hard-wrapped at 80 columns (`proseWrap` in `.prettierrc.toml`), so hand-wrapped
+text gets reflowed. `.prettierignore` keeps prettier away from `CHANGELOG.md`
+(CI generates it) and `.github/`. CI runs the same check on every PR (the "Lint
+and format" workflow), over all files rather than only the ones a PR touches.
+`pre-commit run --all-files` checks the whole tree the same way, but only files
+tracked by git — `git add` new files first.
 
-## PR Title Convention
+## 📋 PR Title Convention
 
-This project uses [Conventional Commits](https://www.conventionalcommits.org/)
-for **PR titles**. Since we squash-merge, the PR title becomes the final commit
-message.
+PR titles follow [Conventional Commits]. The repository squash-merges, so the PR
+title becomes the final commit message. The "Validate PR title" workflow checks
+the title when a PR is opened, edited, or updated — editing the title re-runs
+the check, which appears in the PR's checks as "Conventional Commits".
+Individual commit messages within a PR are free-form; only the title is
+enforced. The "Label PR by convention" workflow labels the PR from its type, and
+those labels choose the categories in the release notes.
 
 ### Format
 
 ```text
 type: description
 ```
+
+Scoped prefixes are rejected: `feat(parser): description` fails the check. `!`
+after the type marks a breaking change: `feat!: remove get_user()`.
 
 ### Allowed Types
 
@@ -42,8 +57,6 @@ type: description
 | `chore`    | Other changes that don't modify src or test files       |
 | `revert`   | Reverts a previous commit                               |
 
-Append `!` to indicate breaking changes (e.g., `feat!: description`).
-
 ### Examples
 
 - `feat: add user authentication`
@@ -51,28 +64,58 @@ Append `!` to indicate breaking changes (e.g., `feat!: description`).
 - `docs: update installation instructions`
 - `feat!: remove get_user()`
 
-### Individual Commits
+## 🔧 Install the plugin that authors these documents
 
-Individual commit messages within a PR are free-form. Only the PR title is
-enforced.
+`README.md` and `CONTRIBUTING.md` are authored through the `reviewed-writer`
+plugin, wrapped here as the `/write-docs` and `/review-docs` skills. Opening a
+PR needs neither; this section is for running them.
+
+The plugin is pinned in `.claude/settings.json`. That declaration names the
+source and installs nothing by itself: Claude Code offers to install it when you
+trust the repository folder. Accept the offer, and the components load at the
+next session start, or immediately after `/reload-plugins`.
+
+When no offer appears — you trusted the folder earlier, or declined — register
+the pinned source yourself, with the `#` suffix set to the `ref` value in
+`.claude/settings.json` (`v0.1.1` as this is written):
+
+```text
+/plugin marketplace add TaiSakuma/reviewed-writer#<ref>
+```
+
+The components load on the same terms: next session start, or `/reload-plugins`.
+
+Registration is per machine rather than per repository, and the add overwrites
+any `reviewed-writer` registration the machine already has. If you run the
+plugin in your own repository at a different tag, re-add that tag when you are
+done here.
+
+The two wrapper skills load from `.claude/skills/` whether or not the plugin is
+installed, so they are offered before they work: invoking `/review-docs` without
+it fails with `Unknown skill: reviewed-writer:persona-review` rather than
+reviewing anything.
 
 ## Releasing
 
-Releases use a two-tag flow. The `u` tag triggers changelog generation, which in
-turn creates the `v` tag and GitHub Release. The pipeline assumes one release in
-progress at a time: push the next `u` tag only after the previous release has
-appeared.
+Maintainers only; the pipeline is adapted from [legendary-octo-happiness] (LOH),
+whose README carries both the procedure ("Cut a release") and the design behind
+it ("Why the pipeline is built this way", "How a release moves through git") —
+only the bump differs here, and one extra guard can fail.
 
-### Steps
+### 🔧 Bump the version and push the tag
 
-1. **Bump the version:**
+Follow LOH's "Cut a release", starting at its first step: check out the commit
+to release. The two steps below replace its bump and its tag push; LOH resumes
+at the workflow runs, and covers the merge-back or backport and the pull that
+follows.
+
+1. **Bump the version** — LOH bumps with `hatch`; here:
 
    Run the repo-local `/bump-version` skill in Claude Code with `patch`,
-   `minor`, `major`, or an explicit version. It updates the `version` field in
-   `.claude-plugin/plugin.json`, creates the bump commit
-   (`Bump version <old> → <new>`), and tags it `u<version>` (annotated).
-
-   Without Claude Code, do the same by hand:
+   `minor`, `major`, or an explicit version. It checks the guards, updates the
+   `version` field in `.claude-plugin/plugin.json`, commits, and tags the commit
+   `u<version>` (annotated). By hand, where `0.1.0` and `0.2.0` stand for the
+   current and new versions:
 
    ```bash
    # edit the "version" field in .claude-plugin/plugin.json, then:
@@ -81,55 +124,42 @@ appeared.
    git tag -a u0.2.0 -m "Bump version 0.1.0 → 0.2.0"
    ```
 
-2. **Push the tag:**
+   Keep the message unconventional as shown, so git-cliff filters it out of
+   `CHANGELOG.md`. The hand path skips the guards, so check them yourself: the
+   tree is clean; HEAD carries `.github/workflows/changelog.yml` and is the
+   commit to release; the version is plain `X.Y.Z` — not `0.2.0-rc.1`, which
+   sorts newest and would move the rolling `latest` tag consumers pin — and
+   greater than the current one; and neither `u<version>` nor `v<version>`
+   exists yet, locally or on origin.
+
+2. **Push only the tag**, never `main --tags`, which fails on a stale local
+   `latest` tag:
 
    ```bash
-   git push origin u<version>
+   git push origin u0.2.0
    ```
 
-   Push only the `u` tag, not `main --tags`: a stale local `latest` tag makes
-   `--tags` fail. GitHub Actions publishes the changelog commit and the other
-   tags back to you.
+If the "Generate changelog" run fails at "Verify tag matches plugin.json
+version", the next section applies; recover any other failure as LOH directs.
 
-3. **Wait for CI:**
-   - The **Changelog** workflow first verifies that the tag matches the
-     `version` in `.claude-plugin/plugin.json` at the tagged commit and fails
-     otherwise. It then creates a `release/<version>` branch at the tagged
-     commit, generates `CHANGELOG.md` and the `v` tag on it, then merges the
-     branch back into `main` (a backport, cut from a commit off `main`'s line,
-     keeps the branch and leaves `main` untouched).
-   - The **Release** workflow then creates a GitHub Release with categorized
-     notes, marking it latest only when it is the newest version.
+### 🔧 Fix a version-check failure
 
-### Releasing from an older commit
+That step is this repository's own: LOH's `hatch` bump made the tag and the
+manifest match by construction, and a hand-edited manifest cannot. It runs
+before the release branch is created, so the trigger tag is the only thing to
+clean up. Delete it, correct the commit — amend rather than add one on top,
+since the pipeline releases the tag's parent — and push again:
 
-Check the commit out first (`git switch --detach <commit>`) and release from
-there. The chosen commit must already carry the pipeline's workflow files: a tag
-push runs the workflow files as of the tagged commit, and a tag on a commit
-without them starts no run at all.
+```bash
+git push origin --delete u0.2.0
+# fix the "version" field in .claude-plugin/plugin.json, then:
+git add .claude-plugin/plugin.json
+git commit --amend --no-edit
+git tag -f -a u0.2.0 -m "Bump version 0.1.0 → 0.2.0"
+git push origin u0.2.0
+```
 
-### If the release fails
-
-If the "Generate changelog" run fails, a "Release a new version" run still
-appears, but its job is skipped and no release is created. Delete the trigger
-tag on GitHub (`git push origin --delete u0.2.0`), delete the `release/0.2.0`
-branch if the failed run left one behind
-(`git push origin --delete release/0.2.0`), and, if the failed run had already
-created the `v` tag (visible under the repository's tags), delete that tag too
-(`git push origin --delete v0.2.0`). If the version-check step failed, the local
-bump commit records the wrong version: fix `.claude-plugin/plugin.json` (or redo
-the bump) and move the `u` tag to the corrected commit. Then fix any other cause
-and push the trigger tag again (`git push origin u0.2.0`).
-
-If instead the "Release a new version" run fails after a successful changelog
-run (for example, a transient error while creating the GitHub Release), the `v`
-tag and the changelog are already correct: re-run that workflow run from the
-Actions tab; do not delete any tags.
-
-### After the release
-
-After a merge-back, pull the changelog commit and the new tags:
-`git pull --tags --force origin main` (`--force` lets the moved `latest` tag
-update; without it the fetch is rejected). When the merge-back was skipped (a
-backport), `main` has nothing new; `git fetch --tags --force origin` retrieves
-the release branch and the tags.
+[pre-commit]: https://pre-commit.com/
+[Conventional Commits]: https://www.conventionalcommits.org/
+[legendary-octo-happiness]:
+  https://github.com/TaiSakuma/legendary-octo-happiness#release-process
