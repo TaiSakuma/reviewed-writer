@@ -14,6 +14,12 @@ the shared review core at
 `${CLAUDE_PLUGIN_ROOT}/skills/persona-review/references/diataxis-review.md`, and
 "the voice rules" to the file named in the profile's Voice rules section.
 
+The run's two numbers are set here: **three drafts**, and a re-review cap of
+**five rounds**. The invocation overrides either, so a repository that wants
+different numbers on every run states them in the wrapper skill that invokes
+this one. Two is the lowest draft count the comparison in steps 5 and 7 works
+with.
+
 Author (or substantially revise) the document defined in the profile's Document
 section using the persona-review workflow. A revision may be triggered by one
 change or one weak part, but drafting, review, and shipping cover the document
@@ -37,17 +43,18 @@ in the repository).
 ## Steps
 
 1. **Scope** — Confirm the change driving the revision, the unit of work, and
-   what is out of scope; confirm the primary personas (whose verdicts outweigh
-   the others when fixes conflict) as the profile's Personas section directs;
-   and confirm the declared quadrant(s) per the Declaration mechanism, noting
-   the matching reader question(s) from the Diátaxis rules. Apply any scoping
-   notes in the profile's Document section. When the section set is an output of
-   the run, sketch the target section set — starting from the current
-   declarations, adding, splitting, merging, or removing sections as the content
-   requires — and declare each section's quadrant. When the status dimension is
-   enabled, confirm the change's status; for spec status, capture the design
-   decisions the text must encode into the review brief (step 5) so the brief is
-   self-contained.
+   what is out of scope; state the run's draft count and re-review cap — the
+   defaults above, unless the invocation sets others; confirm the primary
+   personas (whose verdicts outweigh the others when fixes conflict) as the
+   profile's Personas section directs; and confirm the declared quadrant(s) per
+   the Declaration mechanism, noting the matching reader question(s) from the
+   Diátaxis rules. Apply any scoping notes in the profile's Document section.
+   When the section set is an output of the run, sketch the target section set —
+   starting from the current declarations, adding, splitting, merging, or
+   removing sections as the content requires — and declare each section's
+   quadrant. When the status dimension is enabled, confirm the change's status;
+   for spec status, capture the design decisions the text must encode into the
+   review brief (step 5) so the brief is self-contained.
 
 2. **Gather sources** — Collect the raw material listed in the profile's Sources
    section.
@@ -55,24 +62,25 @@ in the repository).
 3. **Rubric** — Itemize what the document must say (Content), must be true
    (Accuracy), must exclude (Exclusions), and must satisfy editorially (the
    voice rules). When the trigger named in the profile's Premise to pin section
-   applies, pin the named premise first. All three drafts inherit the premise,
-   so a wrong one poisons them identically and the persona pass will not
-   reliably catch it; settle the premise before drafting, against the authority
-   the profile names, if it names one.
+   applies, pin the named premise first. Every draft inherits the premise, so a
+   wrong one poisons them identically and the persona pass will not reliably
+   catch it; settle the premise before drafting, against the authority the
+   profile names, if it names one.
 
-4. **Diverse drafts** — Write three structurally distinct drafts of the whole
-   document, all meeting the rubric, to temp files. When the section set is an
-   output of the run, structure is part of the variation: drafts may differ in
-   how many sections exist and how content is distributed among them, as long as
-   each draft keeps its declarations valid per the Declaration mechanism and
-   declares its own structure. Otherwise, vary only the framing and order.
+4. **Diverse drafts** — Write as many structurally distinct drafts of the whole
+   document as the run's draft count (step 1) sets, all meeting the rubric, to
+   temp files. When the section set is an output of the run, structure is part
+   of the variation: drafts may differ in how many sections exist and how
+   content is distributed among them, as long as each draft keeps its
+   declarations valid per the Declaration mechanism and declares its own
+   structure. Otherwise, vary only the framing and order.
 
 5. **Parallel persona review** — Invoke the `reviewed-writer:persona-review`
-   skill over the three drafts: it composes the shared review brief from the run
-   state and the profile, launches one reviewer per persona in parallel,
-   collects the reviews, and consolidates them into a matrix. This pass
-   validates lens-relevance and accuracy, not framing or altitude; the re-review
-   step below covers that.
+   skill over the drafts: it composes the shared review brief from the run state
+   and the profile, launches one reviewer per persona in parallel, collects the
+   reviews, and consolidates them into a matrix. This pass validates
+   lens-relevance and accuracy, not framing or altitude; the re-review step
+   below covers that.
 
 6. **Fact-check** — Verify every claim and code example against the targets in
    the profile's Fact-check targets section, applying its checking notes. When
@@ -81,8 +89,8 @@ in the repository).
    profile names: a behavior the platform cannot deliver as written is a
    blocking defect. Accuracy beats style.
 
-7. **Synthesize or select** — First, if the review surfaced a flaw shared by all
-   three drafts (most often a flaw in the pinned premise), fix it across the
+7. **Synthesize or select** — First, if the review surfaced a flaw shared by
+   every draft (most often a flaw in the pinned premise), fix it across the
    drafts and re-review once or twice before proceeding — the diverse drafts
    only help once the shared premise is right. Then produce the document: when
    strengths are split across drafts, merge the per-axis winners; when one draft
@@ -95,25 +103,26 @@ in the repository).
    in where it does not belong.
 
 8. **Re-review the resulting document** — The draft review (step 5) does not
-   cover the text you will ship: a merge can inherit a weakness shared by all
-   three drafts, and a chosen-and-edited draft carries changes no reviewer saw.
-   Invoke the `reviewed-writer:persona-review` skill again on the resulting
-   document (same request; the declarations travel with the text as the
-   Declaration mechanism directs, however much a round has changed), apply the
-   genuine fixes within the declared quadrant(s), and re-review — iterating
-   until every persona returns a "ship" verdict (cap at five rounds). Re-run the
-   checks in the profile's Verification section each round, since a fix can
-   introduce a new error. If the cap is reached with dissent remaining, stop and
-   present the unresolved verdicts to the user — do not keep bending the text to
-   chase the last holdout.
+   cover the text you will ship: a merge can inherit a weakness shared by every
+   draft, and a chosen-and-edited draft carries changes no reviewer saw. Invoke
+   the `reviewed-writer:persona-review` skill again on the resulting document
+   (same request; the declarations travel with the text as the Declaration
+   mechanism directs, however much a round has changed), apply the genuine fixes
+   within the declared quadrant(s), and re-review — iterating until every
+   persona returns a "ship" verdict, up to the run's re-review cap (step 1).
+   Re-run the checks in the profile's Verification section each round, since a
+   fix can introduce a new error. If the cap is reached with dissent remaining,
+   stop and present the unresolved verdicts to the user — do not keep bending
+   the text to chase the last holdout.
 
 9. **Verify** — Work through the profile's Verification section: perform any
    one-time wiring it lists, then run its checks.
 
-10. **Record** — Record the run as the profile's Record section directs. When
-    the status dimension is enabled, list the claims that describe intended
-    behavior in the implementation plan, so each is re-verified against the
-    shipped implementation.
+10. **Record** — Record the run as the profile's Record section directs,
+    including the draft count and re-review cap the run used. When the status
+    dimension is enabled, list the claims that describe intended behavior in the
+    implementation plan, so each is re-verified against the shipped
+    implementation.
 
 ## Guidelines
 

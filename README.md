@@ -13,13 +13,16 @@ explanation. Contributions follow the PR-title convention in
 
 | Component          | Kind  | Purpose                                                                                                                                               |
 | ------------------ | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `write-doc`        | skill | Author or substantially revise a document the profile names: rubric, three structurally distinct drafts, persona panel, fact-check, synthesis.        |
+| `write-doc`        | skill | Author or substantially revise a document the profile names: rubric, three diverse drafts by default, persona panel, fact-check, synthesis.           |
 | `persona-review`   | skill | Run one round of persona review — invoked by `write-doc` at its review steps, or standalone for a report-only round.                                  |
 | `persona-reviewer` | agent | Reviews as one fixed persona supplied at the start of its task prompt; launched by `persona-review`, one read-only reviewer per persona, in parallel. |
 
 The re-review loop is bounded: `write-doc` iterates until every persona returns
-a "ship" verdict, capped at five rounds; if the cap is reached with dissent
-remaining, the run stops and reports the unresolved verdicts.
+a "ship" verdict, up to the run's re-review cap; if the cap is reached with
+dissent remaining, the run stops and reports the unresolved verdicts. That cap
+and the number of drafts default to five rounds and three drafts. An invocation
+overrides either, and a wrapper skill invokes `write-doc` on every run, so
+numbers stated there become the repository's standing values.
 
 The plugin's Diátaxis review core (reader questions, per-quadrant guidance,
 restructuring rules, and the reviewers' self-check) ships at
@@ -188,9 +191,9 @@ that form. That discipline is what separates the workflow from the alternatives
 it resembles: a docs linter checks structure and style and never asks whether a
 reader was informed, and Diátaxis applied by hand leaves the classification an
 intention that erodes — here it is a marker the panel re-reads every round.
-Three structurally distinct drafts precede the panel because structure is the
-decision hardest to reverse once a text exists; the orchestrator writes the
-final text, personas' wording is advisory, and accuracy beats style.
+Structurally distinct drafts precede the panel because structure is the decision
+hardest to reverse once a text exists; the orchestrator writes the final text,
+personas' wording is advisory, and accuracy beats style.
 
 The exchange is real. A consuming repository authors and maintains the profile,
 the declaration rules, the persona head files, and the voice rules; they age
@@ -198,10 +201,11 @@ with the documents, and a persona nobody updates does not fail loudly — it kee
 shipping confident verdicts from a reader who no longer exists. A run's cost
 scales with the panel, which is whatever the profile's Personas section lists.
 Each round launches one read-only reviewer per persona, and a full `write-doc`
-run adds up: a panel pass over the three drafts, one or two extra passes when
-the drafts share a flaw, and a re-review loop capped at five rounds — with six
-personas, up to roughly fifty reviews for one document. The workflow fits
-documents revised deliberately for distinct audiences; it is a poor fit for
+run adds up: a panel pass over the drafts, one or two extra passes when the
+drafts share a flaw, and a re-review loop up to the cap — at the default three
+drafts and five rounds, with six personas, up to roughly fifty reviews for one
+document. Lowering either number at invocation lowers that ceiling. The workflow
+fits documents revised deliberately for distinct audiences; it is a poor fit for
 documentation that changes daily or a repository unwilling to keep persona
 definitions current. The exit is bounded, though: the profile, the declaration
 rules, the personas, the voice rules, and the documents themselves all stay in

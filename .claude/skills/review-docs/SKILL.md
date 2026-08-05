@@ -3,6 +3,7 @@ name: review-docs
 description:
   Review README.md or CONTRIBUTING.md once with the persona panel and report; do
   not modify
+argument-hint: "[README.md|CONTRIBUTING.md]"
 ---
 
 The single-round counterpart of `write-docs`: the same panel, one round, no

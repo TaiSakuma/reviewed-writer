@@ -3,6 +3,7 @@ name: bump-version
 description:
   Bump the plugin version in .claude-plugin/plugin.json, create the bump commit,
   and tag it u<version> to trigger the release pipeline
+argument-hint: "[patch|minor|major|X.Y.Z]"
 ---
 
 Bump the plugin version and create the `u<version>` trigger tag — the manual

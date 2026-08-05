@@ -26,9 +26,12 @@ under `.github/`, and two JSON manifests.
 Three components chain at runtime:
 
 1. `skills/write-doc/SKILL.md` — the authoring orchestrator: scope → sources →
-   rubric → three structurally distinct drafts → persona panel → fact-check →
-   synthesize → re-review until every persona ships (cap five rounds) → verify →
-   record.
+   rubric → structurally distinct drafts → persona panel → fact-check →
+   synthesize → re-review until every persona ships (up to the re-review cap) →
+   verify → record. The draft count and the cap are the skill's own, three and
+   five; an invocation overrides either, and a consuming repository's wrapper
+   skill in `.claude/skills/` is where a standing override lives. The profile
+   carries neither — it holds the rules for each round, not how many rounds.
 2. `skills/persona-review/SKILL.md` — one review round, invoked by `write-doc`
    at its review steps or standalone. It composes a self-contained review brief
    to a temp file, then launches one `persona-reviewer` subagent per persona in
