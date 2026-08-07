@@ -93,7 +93,7 @@ repository's default branch.
 
 Add these keys to the repository's `.claude/settings.json`, merging into
 `extraKnownMarketplaces` and `enabledPlugins` when either key already exists
-(create the file if it does not). Set `ref` to a release tag — replace `v0.1.1`
+(create the file if it does not). Set `ref` to a release tag — replace `v0.2.0`
 below with the newest tag on the [releases] page:
 
 ```json
@@ -103,7 +103,7 @@ below with the newest tag on the [releases] page:
       "source": {
         "source": "github",
         "repo": "TaiSakuma/reviewed-writer",
-        "ref": "v0.1.1"
+        "ref": "v0.2.0"
       }
     }
   },
@@ -119,7 +119,7 @@ folder, and components load at the next session start (or after
 added sees no prompt; they register the declared source explicitly:
 
 ```text
-/plugin marketplace add TaiSakuma/reviewed-writer#v0.1.1
+/plugin marketplace add TaiSakuma/reviewed-writer#v0.2.0
 ```
 
 with the `#` suffix matching the checked-in `ref` — the bare
@@ -142,10 +142,10 @@ To upgrade a pinned repository: check the [release notes][releases] for
 interface changes (see Versioning), edit `ref` to the new release tag, and
 commit. The edit does not re-point machines that already registered the
 marketplace — each such machine re-registers, with the new tag in the `#` suffix
-(`v0.2.0` stands for it below); the add overwrites the old registration:
+(`v0.3.0` stands for it below); the add overwrites the old registration:
 
 ```text
-/plugin marketplace add TaiSakuma/reviewed-writer#v0.2.0
+/plugin marketplace add TaiSakuma/reviewed-writer#v0.3.0
 ```
 
 Components load at the next session start (or after `/reload-plugins`). A
@@ -154,16 +154,16 @@ trust-prompt flow as usual.
 
 ## 📋 Versioning
 
-Releases are tagged `v<version>` (for example `v0.1.1`), and
-`.claude-plugin/plugin.json` carries the matching version (`0.1.1`). CI cuts
-releases from `u<version>` trigger tags (for example `u0.1.1`) — `u` tags are
+Releases are tagged `v<version>` (for example `v0.2.0`), and
+`.claude-plugin/plugin.json` carries the matching version (`0.2.0`). CI cuts
+releases from `u<version>` trigger tags (for example `u0.2.0`) — `u` tags are
 triggers, not pin targets. The release runbook and the PR-title convention are
 in [CONTRIBUTING.md][contributing]; the per-release record is
 [CHANGELOG.md][changelog]. The plugin is MIT-licensed ([LICENSE][license]).
 
 An installed plugin runs from a cached clone under
 `~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/` — for this release,
-`~/.claude/plugins/cache/reviewed-writer/reviewed-writer/0.1.1/`. The cache
+`~/.claude/plugins/cache/reviewed-writer/reviewed-writer/0.2.0/`. The cache
 keeps one directory per fetched version.
 
 The rolling `latest` tag points at the highest released version — a backport

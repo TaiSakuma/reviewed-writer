@@ -77,7 +77,7 @@ next session start, or immediately after `/reload-plugins`.
 
 When no offer appears — you trusted the folder earlier, or declined — register
 the pinned source yourself, with the `#` suffix set to the `ref` value in
-`.claude/settings.json` (`v0.1.1` as this is written):
+`.claude/settings.json` (`v0.2.0` as this is written):
 
 ```text
 /plugin marketplace add TaiSakuma/reviewed-writer#<ref>
