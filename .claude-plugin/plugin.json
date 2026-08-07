@@ -1,7 +1,7 @@
 {
   "name": "reviewed-writer",
   "description": "Persona-panel authoring and review workflow with Diátaxis declarations",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "author": { "name": "Tai Sakuma" },
   "license": "MIT",
   "repository": "https://github.com/TaiSakuma/reviewed-writer"
