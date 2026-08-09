@@ -113,13 +113,17 @@ follows.
 
    Run the repo-local `/bump-version` skill in Claude Code with `patch`,
    `minor`, `major`, or an explicit version. It checks the guards, updates the
-   `version` field in `.claude-plugin/plugin.json`, commits, and tags the commit
-   `u<version>` (annotated). By hand, where `0.1.0` and `0.2.0` stand for the
-   current and new versions:
+   `version` field in `.claude-plugin/plugin.json`, refreshes the
+   current-release literals in `README.md`, `CONTRIBUTING.md`, and the pin in
+   `.claude/settings.json`, commits, and tags the commit `u<version>`
+   (annotated). By hand, where `0.1.0` and `0.2.0` stand for the current and new
+   versions:
 
    ```bash
-   # edit the "version" field in .claude-plugin/plugin.json, then:
-   git add .claude-plugin/plugin.json
+   # edit the "version" field in .claude-plugin/plugin.json and refresh the
+   # current-release literals in README.md, CONTRIBUTING.md, and the pin in
+   # .claude/settings.json, then:
+   git add .claude-plugin/plugin.json .claude/settings.json README.md CONTRIBUTING.md
    git commit -m "Bump version 0.1.0 → 0.2.0"
    git tag -a u0.2.0 -m "Bump version 0.1.0 → 0.2.0"
    ```
@@ -152,8 +156,9 @@ since the pipeline releases the tag's parent — and push again:
 
 ```bash
 git push origin --delete u0.2.0
-# fix the "version" field in .claude-plugin/plugin.json, then:
-git add .claude-plugin/plugin.json
+# fix the "version" field in .claude-plugin/plugin.json and re-sweep the
+# current-release literals, then:
+git add .claude-plugin/plugin.json .claude/settings.json README.md CONTRIBUTING.md
 git commit --amend --no-edit
 git tag -f -a u0.2.0 -m "Bump version 0.1.0 → 0.2.0"
 git push origin u0.2.0

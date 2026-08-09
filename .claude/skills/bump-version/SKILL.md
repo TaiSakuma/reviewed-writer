@@ -9,7 +9,10 @@ argument-hint: "[patch|minor|major|X.Y.Z]"
 Bump the plugin version and create the `u<version>` trigger tag — the manual
 step that starts the release pipeline described in `CONTRIBUTING.md`'s Releasing
 section. Invoking this skill is the user's request to create the bump commit and
-tag; nothing here is pushed.
+tag; nothing here is pushed. The bump commit also refreshes the current-release
+literals in the documents and the pin in `.claude/settings.json`; the pipeline's
+merge-back carries them to `main`, and skips them for a backport — deliberately,
+since `main`'s pin must not move to an older version.
 
 ## Steps
 
@@ -40,20 +43,38 @@ tag; nothing here is pushed.
 5. **Edit.** Change the `version` value in `.claude-plugin/plugin.json` with the
    Edit tool. Do not round-trip the file through `jq`, which would reformat it.
 
+   Then sweep the current-release literals from the old version to the new one:
+
+   - `.claude/settings.json` — the pin's `ref` value.
+   - `README.md` — every statement of the current release: the pin example's
+     `ref`, the `@v<old>` re-registration command, and the Versioning examples.
+   - `CONTRIBUTING.md` — the "as this is written" value in the plugin-install
+     section.
+
+   Two exclusions: every version in `CONTRIBUTING.md`'s Releasing section stands
+   for an arbitrary version and stays as it is, and `CHANGELOG.md` is
+   CI-generated and never edited. Check the sweep by grepping the three files
+   for the old version — the only remaining hits must be in the Releasing
+   section.
+
 6. **Commit and tag.** The commit must exist: the pipeline derives the released
    commit as the tag's parent.
 
    ```bash
-   git add .claude-plugin/plugin.json
+   git add .claude-plugin/plugin.json .claude/settings.json README.md CONTRIBUTING.md
    git commit -m "Bump version <old> → <new>"
    git tag -a "u<new>" -m "Bump version <old> → <new>"
    ```
 
    The message is deliberately not a Conventional Commits line: git-cliff
-   filters unconventional commits, which keeps the bump commit out of
-   `CHANGELOG.md`.
+   filters unconventional commits, which keeps the bump commit — the literal
+   sweep included — out of `CHANGELOG.md`. If the pre-commit prettier hook
+   reflows a swept file and aborts the commit, re-stage and commit again.
 
 7. **Hand off.** Do not push. Tell the user the next step is
    `git push origin u<new>` — push only the tag, never `--tags` (a stale local
    `latest` tag makes `--tags` fail) — and point to `CONTRIBUTING.md`'s
-   Releasing section for what CI does next and how to verify it.
+   Releasing section for what CI does next and how to verify it. Remind the user
+   that the checked-in `ref` does not re-point machines that already registered
+   the marketplace: after CI completes, each re-registers with
+   `/plugin marketplace add TaiSakuma/reviewed-writer@v<new>`.
