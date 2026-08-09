@@ -21,24 +21,24 @@ The re-review loop is bounded: `write-doc` iterates until every persona returns
 a "ship" verdict, up to the run's re-review cap; if the cap is reached with
 dissent remaining, the run stops and reports the unresolved verdicts. That cap
 and the number of drafts default to five rounds and three drafts. An invocation
-overrides either, and a wrapper skill invokes `write-doc` on every run, so
-numbers stated there become the repository's standing values.
+overrides either, and a repository that wants standing values states them in the
+wrapper skill through which it invokes `write-doc`.
 
 The plugin's Diátaxis review core (reader questions, per-quadrant guidance,
 restructuring rules, and the reviewers' self-check) ships at
 `${CLAUDE_PLUGIN_ROOT}/skills/persona-review/references/diataxis-review.md` — in
-this repository, `skills/persona-review/references/diataxis-review.md`.
+the source tree, `skills/persona-review/references/diataxis-review.md`.
 
 Invocations are namespaced: `/reviewed-writer:write-doc` and
 `/reviewed-writer:persona-review`. A repository's own wrapper skills in
 `.claude/skills/`, when defined, are the entry points — this repository defines
-`/write-docs` and `/review-docs`; the namespaced names are the fallback.
+`/write-docs` and `/review-docs`; the namespaced names stay available.
 
 ## 📋 What the consuming repository provides
 
 The plugin is repository-agnostic; every repository-specific value lives in
-files the consuming repository checks in, and the skills read the content files
-by name — never from the plugin's own directory:
+files the consuming repository checks in, and the plugin's skills and reviewer
+agent read the content files by name — never from the plugin's own directory:
 
 | File                                                           | Supplies                                                                                                               |
 | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
@@ -49,25 +49,31 @@ by name — never from the plugin's own directory:
 | `.claude/settings.json`                                        | The checked-in marketplace pin and the `enabledPlugins` entry.                                                         |
 | `.claude/skills/*` (optional; for example `write-docs`)        | Thin wrappers keeping the repository's established entry points.                                                       |
 
+The first two rows are read at those literal paths — the skills read the profile
+at `.claude/rules/persona-review-profile.md`, and the reviewer agent reads the
+declaration file at `.claude/rules/diataxis-declaration.md`; the persona files
+and the voice-rules file live wherever the profile names them.
+
 The profile's eleven `##` headings, read by name — a missing or renamed heading
 breaks the run:
 
-- Document — the document(s) the workflow authors, the unit of work, and whether
-  the section set is an output of the run.
-- Personas — the persona head files, and how the primary personas (whose
+- `Document` — the document(s) the workflow authors, the unit of work, and
+  whether the section set is an output of the run.
+- `Personas` — the persona head files, and how the primary personas (whose
   verdicts outweigh the others) are chosen.
-- Declaration mechanism — how units declare their form (points at the
+- `Declaration mechanism` — how units declare their form (points at the
   declaration file), and where out-of-scope content is routed.
-- Premise to pin — when a premise must be settled before drafting, what it is,
+- `Premise to pin` — when a premise must be settled before drafting, what it is,
   and against which authority.
-- Sources — the raw material a run collects.
-- Fact-check targets — what claims are verified against, with checking notes.
-- Status dimension — enabled or disabled; when enabled, units carry an
-  implemented-or-spec status, judged against a named platform.
-- Verification — one-time wiring and the checks re-run every round.
-- Record — how a run is recorded.
-- Voice rules — names the voice-rules file.
-- Extra guidelines — free-form additional rules.
+- `Sources` — the raw material a run collects.
+- `Fact-check targets` — what claims are verified against, with checking notes.
+- `Status dimension` — enabled or disabled; when enabled, units carry an
+  implemented-or-spec status, and the section names the platform spec content
+  must be implementable on.
+- `Verification` — one-time wiring and the checks re-run every round.
+- `Record` — how a run is recorded.
+- `Voice rules` — names the voice-rules file.
+- `Extra guidelines` — free-form additional rules.
 
 The two provenance repositories, [legendary-octo-happiness] and
 [hypothesis-awkward], are worked examples of a complete set. What this inventory
@@ -83,18 +89,19 @@ pin instead (next section) — in the Claude Code prompt:
 /plugin install reviewed-writer@reviewed-writer
 ```
 
-The install prompts for a scope; choose user to keep the install personal to
-this machine. Project scope writes the enablement into the repository's
-checked-in `.claude/settings.json`, and local scope into your gitignored
-`.claude/settings.local.json`. The route is unpinned: the marketplace tracks the
-repository's default branch.
+Check the install summary: if it reports `Run /reload-plugins to activate.`, run
+that command. The install prompts for a scope; choose user to keep the install
+personal to this machine. Project scope writes the enablement into the
+repository's checked-in `.claude/settings.json`, and local scope into your
+gitignored `.claude/settings.local.json`. The route is unpinned: the marketplace
+tracks the repository's default branch.
 
 ## 🔧 Pin the plugin for the repository
 
-Add these keys to the repository's `.claude/settings.json`, merging into
-`extraKnownMarketplaces` and `enabledPlugins` when either key already exists
-(create the file if it does not). Set `ref` to a release tag — replace `v0.2.0`
-below with the newest tag on the [releases] page:
+Add these keys to the repository's `.claude/settings.json` and commit the file,
+merging into `extraKnownMarketplaces` and `enabledPlugins` when either key
+already exists (create the file if it does not). Set `ref` to a release tag from
+the [releases] page or to the rolling `latest` tag:
 
 ```json
 {
@@ -116,66 +123,60 @@ plugin on for this repository. The declaration alone installs nothing: Claude
 Code offers to register the marketplace when a user trusts the repository
 folder, and components load at the next session start (or after
 `/reload-plugins`). A collaborator who trusted the folder before the pin was
-added sees no prompt; they register the declared source explicitly:
+added, or declined the offer, gets no further prompt; they register the declared
+source explicitly:
 
 ```text
-/plugin marketplace add TaiSakuma/reviewed-writer#v0.2.0
+/plugin marketplace add TaiSakuma/reviewed-writer@v0.2.0
 ```
 
-with the `#` suffix matching the checked-in `ref` — the bare
+with the `@` suffix matching the checked-in `ref` — the bare
 `TaiSakuma/reviewed-writer` source string registers the default branch instead
 and overrides the pin. The same command also serves a machine that already
 registered the marketplace — unpinned, or pinned at another tag: the add
 overwrites the recorded source. The registration behavior in this section was
-verified on Claude Code 2.1.221.
+verified on Claude Code 2.1.221; the `@` pin suffix is the documented
+`/plugin marketplace add` syntax for the `owner/repo` form.
 
 ## 🔧 Confirm and upgrade
 
-After either route, the plugin appears in `/plugin` as
-`reviewed-writer@reviewed-writer`, and `/reviewed-writer:write-doc` becomes
-invocable. It does useful work only once the checked-in files listed under What
-the consuming repository provides exist. The running version is the one
-`/plugin` shows for the plugin; the cache directories (see Versioning) only show
-which versions a machine has fetched.
+After either route — at the next session start, or after `/reload-plugins` — the
+plugin appears in `/plugin` as `reviewed-writer@reviewed-writer`, and
+`/reviewed-writer:write-doc` becomes invocable. It does useful work only once
+the checked-in files listed under What the consuming repository provides exist.
+The running version is the one `/plugin` shows for the plugin.
 
-To upgrade a pinned repository: check the [release notes][releases] for
-interface changes (see Versioning), edit `ref` to the new release tag, and
+To move a pinned repository to another release: edit `ref` to the new tag and
 commit. The edit does not re-point machines that already registered the
-marketplace — each such machine re-registers, with the new tag in the `#` suffix
-(`v0.3.0` stands for it below); the add overwrites the old registration:
+marketplace — each such machine re-registers, with the new tag in the `@`
+suffix, and the add overwrites the old registration:
 
 ```text
-/plugin marketplace add TaiSakuma/reviewed-writer#v0.3.0
+/plugin marketplace add TaiSakuma/reviewed-writer@<new-tag>
 ```
 
 Components load at the next session start (or after `/reload-plugins`). A
 machine that never registered the marketplace picks up the new pin through the
-trust-prompt flow as usual.
+trust-prompt flow as usual. A repository pinned at `latest` skips this step: the
+tag itself moves with releases, and each machine follows when its copy of the
+marketplace refreshes — `/plugin marketplace update reviewed-writer`, or
+automatically when auto-update is enabled for the marketplace (it is off by
+default for marketplaces outside Anthropic's own).
 
 ## 📋 Versioning
 
 Releases are tagged `v<version>` (for example `v0.2.0`), and
-`.claude-plugin/plugin.json` carries the matching version (`0.2.0`). CI cuts
-releases from `u<version>` trigger tags (for example `u0.2.0`) — `u` tags are
-triggers, not pin targets. The release runbook and the PR-title convention are
-in [CONTRIBUTING.md][contributing]; the per-release record is
-[CHANGELOG.md][changelog]. The plugin is MIT-licensed ([LICENSE][license]).
+`.claude-plugin/plugin.json` carries the matching version (`0.2.0`); the
+`u<version>` tags on the repository are CI triggers, not pin targets. The
+rolling `latest` tag points at the highest released version. The release runbook
+and the PR-title convention are in [CONTRIBUTING.md][contributing]; the
+per-release record is [CHANGELOG.md][changelog].
 
-An installed plugin runs from a cached clone under
-`~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/` — for this release,
-`~/.claude/plugins/cache/reviewed-writer/reviewed-writer/0.2.0/`. The cache
-keeps one directory per fetched version.
-
-The rolling `latest` tag points at the highest released version — a backport
-does not move it. A consuming repository may pin `"ref": "latest"` to follow
-releases automatically, at the cost of reproducibility: the follow happens at
-each user's next marketplace refresh, so collaborators can run different
-versions from the same checked-in file until they refresh.
-
-The profile's `##` section headings, the declaration file's role, and the
-namespaced invocation names are the plugin's interface to a consuming
-repository. Before 1.0, any release may change that interface; the release notes
-record such changes, so moving a pin can oblige edits to the checked-in files.
+The profile's path and its `##` section headings, the declaration file's path
+and role, and the namespaced invocation names are the plugin's interface to a
+consuming repository. Before 1.0, any release may change that interface; the
+release notes record such changes, so moving a pin can oblige edits to the
+checked-in files.
 
 ## 📖 Why this workflow
 
@@ -188,12 +189,13 @@ content declares its Diátaxis form, and the declaration is the fixed point of a
 review: content is judged against the declared form, never the reverse, and an
 ask that would pull a unit toward another form is routed to the unit that owns
 that form. That discipline is what separates the workflow from the alternatives
-it resembles: a docs linter checks structure and style and never asks whether a
-reader was informed, and Diátaxis applied by hand leaves the classification an
-intention that erodes — here it is a marker the panel re-reads every round.
-Structurally distinct drafts precede the panel because structure is the decision
-hardest to reverse once a text exists; the orchestrator writes the final text,
-personas' wording is advisory, and accuracy beats style.
+it resembles: a docs linter checks structure and style and never asks whether
+the reader's question was answered, and a Diátaxis structure maintained by hand
+leaves the classification an intention that erodes — here it is a marker the
+panel re-reads every round. Structurally distinct drafts precede the panel
+because structure is the decision hardest to reverse once a text exists; the
+orchestrator writes the final text, personas' wording is advisory, and accuracy
+beats style.
 
 The exchange is real. A consuming repository authors and maintains the profile,
 the declaration rules, the persona head files, and the voice rules; they age

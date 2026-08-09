@@ -76,11 +76,11 @@ trust the repository folder. Accept the offer, and the components load at the
 next session start, or immediately after `/reload-plugins`.
 
 When no offer appears — you trusted the folder earlier, or declined — register
-the pinned source yourself, with the `#` suffix set to the `ref` value in
+the pinned source yourself, with the `@` suffix set to the `ref` value in
 `.claude/settings.json` (`v0.2.0` as this is written):
 
 ```text
-/plugin marketplace add TaiSakuma/reviewed-writer#<ref>
+/plugin marketplace add TaiSakuma/reviewed-writer@<ref>
 ```
 
 The components load on the same terms: next session start, or `/reload-plugins`.
