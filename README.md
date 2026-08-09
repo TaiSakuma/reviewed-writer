@@ -110,7 +110,7 @@ the [releases] page or to the rolling `latest` tag:
       "source": {
         "source": "github",
         "repo": "TaiSakuma/reviewed-writer",
-        "ref": "v0.2.0"
+        "ref": "v0.2.1"
       }
     }
   },
@@ -127,7 +127,7 @@ added, or declined the offer, gets no further prompt; they register the declared
 source explicitly:
 
 ```text
-/plugin marketplace add TaiSakuma/reviewed-writer@v0.2.0
+/plugin marketplace add TaiSakuma/reviewed-writer@v0.2.1
 ```
 
 with the `@` suffix matching the checked-in `ref` — the bare
@@ -165,8 +165,8 @@ default for marketplaces outside Anthropic's own).
 
 ## 📋 Versioning
 
-Releases are tagged `v<version>` (for example `v0.2.0`), and
-`.claude-plugin/plugin.json` carries the matching version (`0.2.0`); the
+Releases are tagged `v<version>` (for example `v0.2.1`), and
+`.claude-plugin/plugin.json` carries the matching version (`0.2.1`); the
 `u<version>` tags on the repository are CI triggers, not pin targets. The
 rolling `latest` tag points at the highest released version. The release runbook
 and the PR-title convention are in [CONTRIBUTING.md][contributing]; the
