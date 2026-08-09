@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.2.1] - 2026-08-09
+
+### Bug Fixes
+
+- Make the re-review cap budget all rounds and repeat the fact-check ([#7](https://github.com/TaiSakuma/reviewed-writer/pull/7))
+
+### Documentation
+
+- Trim versioning coverage and fix the pin suffix ([#8](https://github.com/TaiSakuma/reviewed-writer/pull/8))
+
+### Build & CI
+
+- Pin the plugin at v0.2.0 ([#6](https://github.com/TaiSakuma/reviewed-writer/pull/6))
+- Sweep version literals in the bump commit ([#9](https://github.com/TaiSakuma/reviewed-writer/pull/9))
+
+
 ## [0.2.0] - 2026-08-07
 
 ### Features
