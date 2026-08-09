@@ -78,9 +78,12 @@ in the repository).
 5. **Parallel persona review** — Invoke the `reviewed-writer:persona-review`
    skill over the drafts: it composes the shared review brief from the run state
    and the profile, launches one reviewer per persona in parallel, collects the
-   reviews, and consolidates them into a matrix. This pass validates
-   lens-relevance and accuracy, not framing or altitude; the re-review step
-   below covers that.
+   reviews, and consolidates them into a matrix. Read this round's reviews for
+   lens-relevance and accuracy; treat comments on framing or altitude as input
+   to the synthesis (step 7), not as fixes to apply per draft — the drafts
+   differ in framing by design, so a framing critique of one draft mainly
+   informs which framing to keep, and the re-review (step 8) judges the framing
+   of the document that will ship.
 
 6. **Fact-check** — Verify every claim and code example against the targets in
    the profile's Fact-check targets section, applying its checking notes. When
@@ -91,16 +94,19 @@ in the repository).
 
 7. **Synthesize or select** — First, if the review surfaced a flaw shared by
    every draft (most often a flaw in the pinned premise), fix it across the
-   drafts and re-review once or twice before proceeding — the diverse drafts
-   only help once the shared premise is right. Then produce the document: when
-   strengths are split across drafts, merge the per-axis winners; when one draft
-   is strongest on most axes, take it as the base and graft only the specific
-   wins from the others. Merging adds seams, so do not merge for its own sake.
-   Apply cross-cutting fixes and write the final text yourself, following the
-   voice rules — persona-suggested wording is advisory. An ask a persona flagged
-   out of scope, and any content flagged as out of quadrant, is routed to the
-   destination named in the profile's Declaration mechanism section — not folded
-   in where it does not belong.
+   drafts and re-review until the shared flaw is gone before proceeding — the
+   diverse drafts only help once the shared premise is right. These rounds count
+   against the run's re-review cap (step 1), which budgets all re-review rounds
+   across this step and step 8, so spend them here only on a genuinely shared
+   flaw. Then produce the document: when strengths are split across drafts,
+   merge the per-axis winners; when one draft is strongest on most axes, take it
+   as the base and graft only the specific wins from the others. Merging adds
+   seams, so do not merge for its own sake. Apply cross-cutting fixes and write
+   the final text yourself, following the voice rules — persona-suggested
+   wording is advisory. An ask a persona flagged out of scope, and any content
+   flagged as out of quadrant, is routed to the destination named in the
+   profile's Declaration mechanism section — not folded in where it does not
+   belong.
 
 8. **Re-review the resulting document** — The draft review (step 5) does not
    cover the text you will ship: a merge can inherit a weakness shared by every
@@ -109,11 +115,14 @@ in the repository).
    (same request; the declarations travel with the text as the Declaration
    mechanism directs, however much a round has changed), apply the genuine fixes
    within the declared quadrant(s), and re-review — iterating until every
-   persona returns a "ship" verdict, up to the run's re-review cap (step 1).
-   Re-run the checks in the profile's Verification section each round, since a
-   fix can introduce a new error. If the cap is reached with dissent remaining,
-   stop and present the unresolved verdicts to the user — do not keep bending
-   the text to chase the last holdout.
+   persona returns a "ship" verdict, up to the run's re-review cap (step 1;
+   rounds spent in step 7 count against it). Each round, re-run the checks in
+   the profile's Verification section, and re-run the fact-check (step 6) over
+   the claims the round's fixes changed or added, since a fix can introduce a
+   new error — including a new behavioral claim no earlier fact-check saw. If
+   the cap is reached with dissent remaining, stop and present the unresolved
+   verdicts to the user — do not keep bending the text to chase the last
+   holdout.
 
 9. **Verify** — Work through the profile's Verification section: perform any
    one-time wiring it lists, then run its checks.

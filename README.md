@@ -201,16 +201,17 @@ with the documents, and a persona nobody updates does not fail loudly — it kee
 shipping confident verdicts from a reader who no longer exists. A run's cost
 scales with the panel, which is whatever the profile's Personas section lists.
 Each round launches one read-only reviewer per persona, and a full `write-doc`
-run adds up: a panel pass over the drafts, one or two extra passes when the
-drafts share a flaw, and a re-review loop up to the cap — at the default three
-drafts and five rounds, with six personas, up to roughly fifty reviews for one
-document. Lowering either number at invocation lowers that ceiling. The workflow
-fits documents revised deliberately for distinct audiences; it is a poor fit for
-documentation that changes daily or a repository unwilling to keep persona
-definitions current. The exit is bounded, though: the profile, the declaration
-rules, the personas, the voice rules, and the documents themselves all stay in
-the consuming repository, so dropping the plugin forfeits the machinery, not the
-content.
+run adds up: a panel pass over the drafts, then re-review rounds — including any
+spent on a flaw all the drafts share — up to the cap. At the default three
+drafts and five rounds, with six personas, that is at most six panel rounds and
+36 reviews for one document. Lowering the cap at invocation lowers that ceiling;
+lowering the draft count lowers how much each reviewer reads, not how many
+reviews run. The workflow fits documents revised deliberately for distinct
+audiences; it is a poor fit for documentation that changes daily or a repository
+unwilling to keep persona definitions current. The exit is bounded, though: the
+profile, the declaration rules, the personas, the voice rules, and the documents
+themselves all stay in the consuming repository, so dropping the plugin forfeits
+the machinery, not the content.
 
 ## 📖 Provenance
 
