@@ -70,7 +70,7 @@ after the type marks a breaking change: `feat!: remove get_user()`.
 plugin, wrapped here as `/write-docs` and `/review-docs`. Opening a PR needs
 neither.
 
-The pin is checked in; `.claude/settings.json` names the tag (`v0.2.1` as this
+The pin is checked in; `.claude/settings.json` names the tag (`v0.3.0` as this
 is written). With the folder trusted, run `/plugin` in a session here and find
 `reviewed-writer@reviewed-writer` in the Installed tab:
 
