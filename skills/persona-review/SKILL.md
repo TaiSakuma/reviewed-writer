@@ -45,24 +45,24 @@ not proceed on a guess or with invented contents.
    brief is self-contained; what is in and out of scope; the rubric, when the
    request has one; verified facts; link targets; and the path of the Diátaxis
    core, so reviewers read the core from the brief. Reviewers never depend on
-   files outside the repository, this skill, and the brief.
+   files outside the repository, this skill, and the brief. In a run's later
+   rounds, update the existing brief in place — the draft path(s), the verified
+   facts, what the round changed — rather than composing a new one; its path
+   stays the same.
 
 3. **Launch the panel.** For each persona in the request, launch one
    `reviewed-writer:persona-reviewer` subagent via the Agent tool's
-   `subagent_type`, all in parallel. Open each task prompt with the full content
-   of that persona's head file, from the profile's Personas section, then give
-   the brief path and the draft path(s). Ask each for: answers to the reader
-   questions for the content its lens serves; a score per draft on the rubric
-   axes, when the brief carries a rubric; lens-specific flags with quoted text
-   and `file:line` citations; how relevant the document is to it (per section,
-   when the section set is an output of the run); the best draft overall and per
-   axis, when several drafts are under review; specific fixes; structural
-   recommendations (sections to add, split, merge, or remove) when the section
-   set is an output of the run; the single most important improvement; an
-   alignment self-check per the Diátaxis rules (out-of-scope asks and their
-   routing; out-of-quadrant content flagged); and a one-line ship/revise verdict
-   (with the single most important change if revising).
+   `subagent_type`, all in parallel. Each task prompt gives, in order, the path
+   of the persona's head file from the profile's Personas section, the brief
+   path, and the draft path(s). The report's shape is the agent's own contract;
+   do not restate it.
 
-4. **Collect and consolidate.** If a reviewer errors out mid-run, re-launch it —
-   do not treat a missing verdict as a pass. Consolidate the reviews into a
-   matrix and report it to the caller with each reviewer's verdict and flags.
+4. **Collect and consolidate.** If a reviewer errors out or returns no
+   `Verdict:` line, re-launch it — do not treat a missing verdict as a pass.
+   Build the matrix from the reports' tables, shorter than any one report: each
+   persona's verdict line; with a rubric, scores by axis and draft and the best
+   draft by count of personas; a relevance grid, units as rows and personas as
+   columns, with the marker read for each unit and any disagreement; then the
+   flag rows, `blocking` first, grouped by unit, one row per finding naming the
+   personas raising it and keeping its kind, destination, and fix. Report the
+   matrix to the caller.

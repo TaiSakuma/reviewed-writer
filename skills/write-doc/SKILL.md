@@ -111,12 +111,14 @@ in the repository).
    flaw. Then produce the document: when strengths are split across drafts,
    merge the per-axis winners; when one draft is strongest on most axes, take it
    as the base and graft only the specific wins from the others. Merging adds
-   seams, so do not merge for its own sake. Apply cross-cutting fixes and write
-   the final text yourself, following the voice rules — persona-suggested
-   wording is advisory. An ask a persona flagged out of scope, and any content
-   flagged as out of quadrant, is routed to the destination named in the
-   profile's Declaration mechanism section — not folded in where it does not
-   belong.
+   seams, so do not merge for its own sake. Produce it from the draft files —
+   copy the base draft, or assemble the winning sections from their files — and
+   edit in place; do not retype text a draft already holds. Apply cross-cutting
+   fixes and write the final text yourself, following the voice rules —
+   persona-suggested wording is advisory. An ask a persona flagged out of scope,
+   and any content flagged as out of quadrant, is routed to the destination
+   named in the profile's Declaration mechanism section — not folded in where it
+   does not belong.
 
 8. **Re-review the resulting document** — The draft review (step 5) does not
    cover the text you will ship: a merge can inherit a weakness shared by every
@@ -124,15 +126,15 @@ in the repository).
    the `reviewed-writer:persona-review` skill again on the resulting document
    (same request; the declarations travel with the text as the Declaration
    mechanism directs, however much a round has changed), apply the genuine fixes
-   within the declared quadrant(s), and re-review — iterating until every
-   persona returns a "ship" verdict, up to the run's re-review cap (step 1;
-   rounds spent in step 7 count against it). Each round, re-run the checks in
-   the profile's Verification section, and re-run the fact-check (step 6) over
-   the claims the round's fixes changed or added, since a fix can introduce a
-   new error — including a new behavioral claim no earlier fact-check saw. If
-   the cap is reached with dissent remaining, stop and present the unresolved
-   verdicts to the user — do not keep bending the text to chase the last
-   holdout.
+   within the declared quadrant(s) as targeted edits, never by rewriting the
+   document, and re-review — iterating until every persona returns a "ship"
+   verdict, up to the run's re-review cap (step 1; rounds spent in step 7 count
+   against it). Each round, re-run the checks in the profile's Verification
+   section, and re-run the fact-check (step 6) over the claims the round's fixes
+   changed or added, since a fix can introduce a new error — including a new
+   behavioral claim no earlier fact-check saw. If the cap is reached with
+   dissent remaining, stop and present the unresolved verdicts to the user — do
+   not keep bending the text to chase the last holdout.
 
 9. **Verify** — Work through the profile's Verification section: perform any
    one-time wiring it lists, then run its checks.
@@ -149,9 +151,9 @@ in the repository).
   need and the others can tell early that it is not for them while still seeing
   it is useful to its own readers.
 - Content is not obligated to serve every persona, and the document does not owe
-  any persona content. The correct review from a low-relevance persona is a low
-  relevance score and a ship verdict — not asks that bend the document toward
-  its lens. When personas' fixes conflict, the primary personas from step 1 win.
+  any persona content. The correct review from a low-relevance persona is `low`
+  relevance and a ship verdict — not asks that bend the document toward its
+  lens. When personas' fixes conflict, the primary personas from step 1 win.
 - When the section set is an output of the run: relocating out-of-quadrant
   content, creating the section a quadrant needs, and removing a section that no
   longer serves anyone are actions the run takes, guided by persona feedback.
@@ -179,4 +181,11 @@ in the repository).
   content is relocated or routed, never polished in place.
 - Voice and formatting follow the voice rules; the orchestrator writes the final
   text, not the personas.
+- The orchestrator's context is the run's scarcest resource. Keep command output
+  out of it: send a check's output to a file and print its exit status and
+  failing lines; compare versions with `--stat` or a diff of the changed
+  section; read the document under review once per round and work from the
+  matrix's citations. When a search settles a question, count the matches first
+  and never truncate the output — a cut-off search turns present evidence into
+  apparent absence.
 - Apply the additional guidelines in the profile's Extra guidelines section.

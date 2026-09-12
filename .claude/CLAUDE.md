@@ -36,9 +36,10 @@ Four components chain at runtime:
    at its review steps or standalone. It composes a self-contained review brief
    to a temp file, then launches one `persona-reviewer` subagent per persona in
    parallel and consolidates their reviews into a matrix.
-3. `agents/persona-reviewer.md` — a read-only subagent that adopts the persona
-   definition its task prompt opens with, reviews each unit against its declared
-   quadrant, and returns a structured review with a ship/revise verdict.
+3. `agents/persona-reviewer.md` — a read-only subagent that reads and adopts the
+   persona head file its task prompt names first, reviews each unit against its
+   declared quadrant, and returns a tabular report headed by a ship/revise
+   verdict.
 4. `templates/` — one skeleton per consumer-side file: the profile, the
    declaration file, a persona head file, and the voice rules. Both skills run a
    preflight before anything else: a missing file, or a missing or renamed
