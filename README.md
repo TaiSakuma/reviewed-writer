@@ -273,7 +273,7 @@ write. The preflight, as described under What the consuming repository provides,
 confirms that those four files exist and that the profile carries its eleven
 headings; it does not check the document or its markers, and it reads only two
 bodies, the Personas list and the Voice rules path, to find those files. A
-placeholder there stops the run; one elsewhere passes and shows up in the
+placeholder path there stops the run; one elsewhere passes and shows up in the
 reviews instead.
 
 Commit the profile, the declaration file, the persona head files, and the voice
@@ -291,8 +291,8 @@ marketplace; on each such machine, three steps:
    session, or
    `claude plugin marketplace add TaiSakuma/reviewed-writer@<new-tag>` from a
    shell, with the tag in the `v<version>` form the pin uses.
-2. Update the installed plugin — re-registering leaves it at the old version:
-   from a shell in the repository,
+2. Update the installed plugin — re-registering leaves the installed copy as it
+   is: from a shell in the repository,
    `claude plugin update reviewed-writer@reviewed-writer --scope <scope>` with
    the scope the install used (`user`, `project`, or `local`; the command
    defaults to `user`, and the `/plugin` Installed tab groups plugins by scope).
@@ -300,7 +300,9 @@ marketplace; on each such machine, three steps:
    one; when the registration was untagged before step 1, that leaves the
    default-branch copy in place, so replace it instead:
    `claude plugin uninstall reviewed-writer@reviewed-writer --scope <scope>`,
-   then the install command under Pin the plugin for the repository.
+   then `claude plugin install reviewed-writer@reviewed-writer --scope <scope>`.
+   At project scope both commands rewrite `.claude/settings.json`; check
+   `git diff` afterwards.
 3. Load the new version: `/reload-plugins`, or restart Claude Code. `/plugin`
    then shows the new version for `reviewed-writer@reviewed-writer`.
 
