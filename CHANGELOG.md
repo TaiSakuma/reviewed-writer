@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.3.0] - 2026-09-12
+
+### Features
+
+- Guide first-run setup with templates and a missing-file preflight ([#11](https://github.com/TaiSakuma/reviewed-writer/pull/11))
+
+
 ## [0.2.1] - 2026-08-09
 
 ### Bug Fixes
