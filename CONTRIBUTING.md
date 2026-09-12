@@ -81,7 +81,8 @@ is written). With the folder trusted, run `/plugin` in a session here and find
   (`claude plugin marketplace list --json` shows a `ref` only for a pinned one):
   the checked-in `ref` does not move an existing registration. Take steps 1 to 3
   of the README's Move the pin to a new release with the pinned tag as the new
-  tag.
+  tag; an untagged registration already at the pinned version number takes step
+  2's uninstall-and-install route.
 - The pinned version from a pinned registration: done.
 
 A registration you make yourself is recorded outside this repository and

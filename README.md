@@ -127,8 +127,8 @@ checked-in `ref`, which overwrites the recorded source:
 From a shell, `claude plugin marketplace add TaiSakuma/reviewed-writer@v0.2.1`
 does the same. The bare `TaiSakuma/reviewed-writer` source string registers the
 default branch instead and overrides the pin. If the plugin is already installed
-from this marketplace, re-registering leaves it at the old version; update it as
-under Move the pin to a new release, steps 2 and 3.
+from this marketplace, re-registering leaves the installed copy as it is; update
+it as under Move the pin to a new release, steps 2 and 3.
 
 ## 🔧 Confirm the install
 
@@ -271,9 +271,10 @@ modifies nothing. If it instead stops and names a missing path or profile
 heading together with the template that supplies it, that is what is still to
 write. The preflight, as described under What the consuming repository provides,
 confirms that those four files exist and that the profile carries its eleven
-headings; it does not check the document or its markers, and it does not read
-the bodies, so a placeholder left in place passes it and shows up in the reviews
-instead.
+headings; it does not check the document or its markers, and it reads only two
+bodies, the Personas list and the Voice rules path, to find those files. A
+placeholder there stops the run; one elsewhere passes and shows up in the
+reviews instead.
 
 Commit the profile, the declaration file, the persona head files, and the voice
 rules. `/reviewed-writer:write-doc`, or the wrapper skill, then authors or
@@ -291,13 +292,15 @@ marketplace; on each such machine, three steps:
    `claude plugin marketplace add TaiSakuma/reviewed-writer@<new-tag>` from a
    shell, with the tag in the `v<version>` form the pin uses.
 2. Update the installed plugin — re-registering leaves it at the old version:
-   `/plugin update reviewed-writer@reviewed-writer` in a session, or from a
-   shell in the repository
+   from a shell in the repository,
    `claude plugin update reviewed-writer@reviewed-writer --scope <scope>` with
-   the scope the install used (`user`, `project`, or `local`; the shell form
+   the scope the install used (`user`, `project`, or `local`; the command
    defaults to `user`, and the `/plugin` Installed tab groups plugins by scope).
    The update is skipped when the resolved version already matches the installed
-   one.
+   one; when the registration was untagged before step 1, that leaves the
+   default-branch copy in place, so replace it instead:
+   `claude plugin uninstall reviewed-writer@reviewed-writer --scope <scope>`,
+   then the install command under Pin the plugin for the repository.
 3. Load the new version: `/reload-plugins`, or restart Claude Code. `/plugin`
    then shows the new version for `reviewed-writer@reviewed-writer`.
 
@@ -395,8 +398,9 @@ file; every persona head file the `Personas` section lists; and the voice-rules
 file the `Voice rules` section names. A missing file, or a profile section
 absent or renamed, stops the run: it reports the missing path or heading, names
 the template in the plugin's `templates/` directory to copy and fill in, and
-does not proceed on a guess. The check confirms existence and headings; it does
-not read the bodies.
+does not proceed on a guess. The check confirms existence and headings; it reads
+no body beyond the Personas and Voice rules sections, which name the files it
+looks for.
 
 **Worked examples.** This repository's own [`.claude/`
 directory][own-claude-dir] is a filled-in set in the source tree — the profile,
