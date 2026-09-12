@@ -46,8 +46,8 @@ since `main`'s pin must not move to an older version.
    Then sweep the current-release literals from the old version to the new one:
 
    - `.claude/settings.json` — the pin's `ref` value.
-   - `README.md` — every statement of the current release: the pin example's
-     `ref`, the `@v<old>` re-registration command, and the Versioning examples.
+   - `README.md` — every literal of the current version (grep for it): the pin
+     example's `ref`, the `@v<old>` commands, and the Versioning examples.
    - `CONTRIBUTING.md` — the "as this is written" value in the plugin-install
      section.
 
@@ -76,5 +76,6 @@ since `main`'s pin must not move to an older version.
    `latest` tag makes `--tags` fail) — and point to `CONTRIBUTING.md`'s
    Releasing section for what CI does next and how to verify it. Remind the user
    that the checked-in `ref` does not re-point machines that already registered
-   the marketplace: after CI completes, each re-registers with
-   `/plugin marketplace add TaiSakuma/reviewed-writer@v<new>`.
+   the marketplace: after CI completes, each re-registers at the new tag and
+   then updates the plugin, as the README's Move the pin to a new release
+   describes.

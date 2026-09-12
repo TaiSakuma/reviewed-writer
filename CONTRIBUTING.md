@@ -67,33 +67,37 @@ after the type marks a breaking change: `feat!: remove get_user()`.
 ## 🔧 Install the plugin that authors these documents
 
 `README.md` and `CONTRIBUTING.md` are authored through the `reviewed-writer`
-plugin, wrapped here as the `/write-docs` and `/review-docs` skills. Opening a
-PR needs neither; this section is for running them.
+plugin, wrapped here as `/write-docs` and `/review-docs`. Opening a PR needs
+neither.
 
-The plugin is pinned in `.claude/settings.json`. That declaration names the
-source and installs nothing by itself: Claude Code offers to install it when you
-trust the repository folder. Accept the offer, and the components load at the
-next session start, or immediately after `/reload-plugins`.
+The pin is checked in; `.claude/settings.json` names the tag (`v0.2.1` as this
+is written). With the folder trusted, run `/plugin` in a session here and find
+`reviewed-writer@reviewed-writer` in the Installed tab:
 
-When no offer appears — you trusted the folder earlier, or declined — register
-the pinned source yourself, with the `@` suffix set to the `ref` value in
-`.claude/settings.json` (`v0.2.1` as this is written):
+- Not installed: install it as the [README][readme] describes under Pin the
+  plugin for the repository, install command and scope note, then Confirm the
+  install.
+- Another version, or the pinned version from a registration without a tag
+  (`claude plugin marketplace list --json` shows a `ref` only for a pinned one):
+  the checked-in `ref` does not move an existing registration. Take steps 1 to 3
+  of the README's Move the pin to a new release with the pinned tag as the new
+  tag; an untagged registration already at the pinned version number takes step
+  2's uninstall-and-install route.
+- The pinned version from a pinned registration: done.
 
-```text
-/plugin marketplace add TaiSakuma/reviewed-writer@<ref>
-```
+A registration you make yourself is recorded outside this repository and
+replaces the machine's `reviewed-writer` source. If you run the plugin elsewhere
+at another tag, re-add that tag, update, and reload there when you are done
+here.
 
-The components load on the same terms: next session start, or `/reload-plugins`.
+A run uses the installed copy, not the working tree: an edit to `skills/`,
+`agents/`, or `templates/` reaches a run only after a release and the three
+steps above on your machine; the wrappers under `.claude/skills/` are read from
+the tree without a release.
 
-Registration is per machine rather than per repository, and the add overwrites
-any `reviewed-writer` registration the machine already has. If you run the
-plugin in your own repository at a different tag, re-add that tag when you are
-done here.
-
-The two wrapper skills load from `.claude/skills/` whether or not the plugin is
-installed, so they are offered before they work: invoking `/review-docs` without
-it fails with `Unknown skill: reviewed-writer:persona-review` rather than
-reviewing anything.
+If `/write-docs` or `/review-docs` fails with an unknown-skill error naming
+`reviewed-writer:write-doc` or `reviewed-writer:persona-review`, the plugin is
+not loaded: run `/reload-plugins`, or go through the cases above.
 
 ## Releasing
 
@@ -164,6 +168,7 @@ git tag -f -a u0.2.0 -m "Bump version 0.1.0 → 0.2.0"
 git push origin u0.2.0
 ```
 
+[readme]: README.md
 [pre-commit]: https://pre-commit.com/
 [Conventional Commits]: https://www.conventionalcommits.org/
 [legendary-octo-happiness]:
