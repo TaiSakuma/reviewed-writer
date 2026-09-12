@@ -16,6 +16,16 @@ Diátaxis rules are the shared review core at
 `${CLAUDE_PLUGIN_ROOT}/skills/persona-review/references/diataxis-review.md`;
 read it too — composing the brief needs its reader questions.
 
+Before anything else, confirm the consumer-side files exist: the profile at that
+path, carrying every `##` section that
+`${CLAUDE_PLUGIN_ROOT}/templates/persona-review-profile.md` lists; the
+declaration file at `.claude/rules/diataxis-declaration.md`; every persona head
+file the profile's Personas section lists; and the voice-rules file its Voice
+rules section names. If any file is missing, or a profile section is absent or
+renamed, stop: report the missing path or heading to the user, name the matching
+template under `${CLAUDE_PLUGIN_ROOT}/templates/` to copy and fill in, and do
+not proceed on a guess or with invented contents.
+
 ## Steps
 
 1. **Determine the review request.** When invoked from an authoring run, the run

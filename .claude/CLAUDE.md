@@ -39,6 +39,10 @@ Three components chain at runtime:
 3. `agents/persona-reviewer.md` — a read-only subagent that adopts the persona
    definition its task prompt opens with, reviews each unit against its declared
    quadrant, and returns a structured review with a ship/revise verdict.
+4. `templates/` — one skeleton per consumer-side file: the profile, the
+   declaration file, a persona head file, and the voice rules. Both skills run a
+   preflight before anything else: a missing file, or a missing or renamed
+   profile section, stops the run and names the template to copy.
 
 The shared review core — reader questions, per-quadrant guidance, restructuring
 rules (create/remove/split/merge/relocate/reclassify), and the reviewers'
@@ -60,8 +64,9 @@ the consuming repository checks in, and the skills read them by name:
   shapes, and the declaration record.
 - Persona head files in `.claude/personas/`, listed in the profile.
 
-When editing the skills, keep this contract in sync across all three components
-and the README, which document the same section list.
+When editing the skills, keep this contract in sync across all three components,
+the README, and the profile template `templates/persona-review-profile.md`,
+which document the same section list.
 
 ## Design invariants
 
