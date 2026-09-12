@@ -76,5 +76,6 @@ since `main`'s pin must not move to an older version.
    `latest` tag makes `--tags` fail) — and point to `CONTRIBUTING.md`'s
    Releasing section for what CI does next and how to verify it. Remind the user
    that the checked-in `ref` does not re-point machines that already registered
-   the marketplace: after CI completes, each re-registers with
-   `/plugin marketplace add TaiSakuma/reviewed-writer@v<new>`.
+   the marketplace: after CI completes, each re-registers at the new tag and
+   then updates the plugin, as the README's Move the pin to a new release
+   describes.
