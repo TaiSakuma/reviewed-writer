@@ -14,12 +14,12 @@ convention in [CONTRIBUTING.md][contributing].
 
 ## 📋 What the plugin ships
 
-| Component          | Kind  | Purpose                                                                                                                                                                                                                                                       |
-| ------------------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `write-doc`        | skill | Authors or substantially revises the document the profile names: scoping with you, rubric, structurally distinct drafts, persona panel, fact-check, synthesis, re-review.                                                                                     |
-| `persona-review`   | skill | Runs one review round — invoked by `write-doc` at its review steps, or standalone for a report-only round.                                                                                                                                                    |
-| `persona-reviewer` | agent | Reviews as one fixed persona whose head file its task prompt names first; launched by `persona-review`, one read-only reviewer per persona, in parallel; the plugin pins no model, so a reviewer runs on the model the launching session gives its subagents. |
-| `templates/`       | files | Four skeletons: the profile, the declaration file, a persona head file, the voice rules.                                                                                                                                                                      |
+| Component          | Kind  | Purpose                                                                                                                                                                                                                                                                                                                                   |
+| ------------------ | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `write-doc`        | skill | Authors or substantially revises the document the profile names: scoping with you, rubric, structurally distinct drafts, persona panel, fact-check, synthesis, re-review.                                                                                                                                                                 |
+| `persona-review`   | skill | Runs one review round — invoked by `write-doc` at its review steps, or standalone for a report-only round.                                                                                                                                                                                                                                |
+| `persona-reviewer` | agent | Reviews as one fixed persona whose head file its task prompt names first; launched by `persona-review` in a run's first round, one read-only reviewer per persona, in parallel, and continued with what changed in each later round; the plugin pins no model, so a reviewer runs on the model the launching session gives its subagents. |
+| `templates/`       | files | Four skeletons: the profile, the declaration file, a persona head file, the voice rules.                                                                                                                                                                                                                                                  |
 
 Invocations are namespaced: `/reviewed-writer:write-doc` and
 `/reviewed-writer:persona-review`. A repository's own wrapper skills in
@@ -482,27 +482,28 @@ the declaration rules, the persona head files, and the voice rules; the
 templates shorten the first pass, not the upkeep. They age with the documents,
 and a persona nobody updates does not fail loudly — it keeps shipping confident
 verdicts from a reader who no longer exists. A run's cost scales with the panel
-the profile's `Personas` section lists: each round launches one read-only
+the profile's `Personas` section lists: the draft round launches one read-only
 reviewer per persona, and one review is one subagent reading its persona head
-file, the run's brief, and the text under review — the whole document, or every
-draft in the draft round. The panel runs in parallel, and the orchestrator
-writes each draft in full before the panel sees it. A full `write-doc` run adds
-a panel pass over the drafts to the re-review rounds, up to the cap. At the
-default draft count and cap — three and five — with six personas, that is at
-most six panel rounds and 36 reviews for one document; a panel of one is valid
-and costs a sixth of that. The checked-in files serve the whole repository,
-while a run covers the document the profile's `Document` section sets as its
-unit of work, so the setup is authored once and the run cost repeats for each
-document revised. Lowering the cap at invocation lowers the ceiling; lowering
-the draft count lowers how much each reviewer reads, not how many reviews run.
-The workflow fits documents revised deliberately for distinct audiences; it is a
-poor fit for documentation that changes daily, or a repository unwilling to keep
-persona definitions current. A run is driven from a session: it settles scope
-with you and hands unresolved dissent back to you, so it is an authoring step,
-not a check that can gate a pull request. The exit is bounded: the profile, the
-declaration rules, the personas, the voice rules, and the documents stay in the
-consuming repository, so dropping the plugin forfeits the machinery, not the
-content.
+file, the run's brief, and the text under review — every draft in the draft
+round; each later round continues the same reviewers with what changed, so it
+costs a follow-up per persona, not a fresh review. The panel runs in parallel,
+and the orchestrator writes each draft in full before the panel sees it. A full
+`write-doc` run adds a panel pass over the drafts to the re-review rounds, up to
+the cap. At the default draft count and cap — three and five — with six
+personas, that is at most six panel rounds — six full reviews and up to 30
+follow-ups — for one document; a panel of one is valid and costs a sixth of
+that. The checked-in files serve the whole repository, while a run covers the
+document the profile's `Document` section sets as its unit of work, so the setup
+is authored once and the run cost repeats for each document revised. Lowering
+the cap at invocation lowers the ceiling; lowering the draft count lowers how
+much each reviewer reads, not how many reviews run. The workflow fits documents
+revised deliberately for distinct audiences; it is a poor fit for documentation
+that changes daily, or a repository unwilling to keep persona definitions
+current. A run is driven from a session: it settles scope with you and hands
+unresolved dissent back to you, so it is an authoring step, not a check that can
+gate a pull request. The exit is bounded: the profile, the declaration rules,
+the personas, the voice rules, and the documents stay in the consuming
+repository, so dropping the plugin forfeits the machinery, not the content.
 
 ## 📖 Provenance
 

@@ -85,3 +85,14 @@ all.
 
 Length follows the findings, not a target: merge duplicate findings into one row
 and shorten cells, but never leave a finding out.
+
+**Follow-up.** When the orchestrator continues you with a later round — the text
+under review, the units changed since your last review, and your earlier rows by
+matrix number with their disposition — re-read the whole text: a fix that did
+not land, and a declined row you still hold, are rows again. Reply with the
+follow-up form and nothing else: the `Verdict` line; `Landed:` and `Open:`, each
+the earlier row numbers it applies to or `none`; new Flags rows, unnumbered; the
+Units table only for units whose marker or your relevance changed. Your earlier
+verdict is a record, not a commitment: a change you would not ship is a
+`blocking` row whatever you said before, and so is anything new you notice on
+unchanged text.

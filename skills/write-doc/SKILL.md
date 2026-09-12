@@ -87,13 +87,14 @@ in the repository).
 
 5. **Parallel persona review** — Invoke the `reviewed-writer:persona-review`
    skill over the drafts: it composes the shared review brief from the run state
-   and the profile, launches one reviewer per persona in parallel, collects the
-   reviews, and consolidates them into a matrix. Read this round's reviews for
-   lens-relevance and accuracy; treat comments on framing or altitude as input
-   to the synthesis (step 7), not as fixes to apply per draft — the drafts
-   differ in framing by design, so a framing critique of one draft mainly
-   informs which framing to keep, and the re-review (step 8) judges the framing
-   of the document that will ship.
+   and the profile, launches one reviewer per persona in parallel — the
+   reviewers the run's later rounds continue — collects the reviews, and
+   consolidates them into a matrix. Read this round's reviews for lens-relevance
+   and accuracy; treat comments on framing or altitude as input to the synthesis
+   (step 7), not as fixes to apply per draft — the drafts differ in framing by
+   design, so a framing critique of one draft mainly informs which framing to
+   keep, and the re-review (step 8) judges the framing of the document that will
+   ship.
 
 6. **Fact-check** — Verify every claim and code example against the targets in
    the profile's Fact-check targets section, applying its checking notes. When
@@ -125,16 +126,20 @@ in the repository).
    draft, and a chosen-and-edited draft carries changes no reviewer saw. Invoke
    the `reviewed-writer:persona-review` skill again on the resulting document
    (same request; the declarations travel with the text as the Declaration
-   mechanism directs, however much a round has changed), apply the genuine fixes
-   within the declared quadrant(s) as targeted edits, never by rewriting the
-   document, and re-review — iterating until every persona returns a "ship"
-   verdict, up to the run's re-review cap (step 1; rounds spent in step 7 count
-   against it). Each round, re-run the checks in the profile's Verification
-   section, and re-run the fact-check (step 6) over the claims the round's fixes
-   changed or added, since a fix can introduce a new error — including a new
-   behavioral claim no earlier fact-check saw. If the cap is reached with
-   dissent remaining, stop and present the unresolved verdicts to the user — do
-   not keep bending the text to chase the last holdout.
+   mechanism directs, however much a round has changed): it continues the draft
+   round's reviewers rather than launching new ones, so a round costs one
+   follow-up per persona. Apply the genuine fixes within the declared
+   quadrant(s) as targeted edits, never by rewriting the document, recording for
+   each flag row whether it was applied or declined with the reason — the next
+   round's follow-ups carry that — and re-review, iterating until a round
+   returns a "ship" verdict from every persona on the text as it stands, up to
+   the run's re-review cap (step 1; rounds spent in step 7 count against it).
+   Each round, re-run the checks in the profile's Verification section, and
+   re-run the fact-check (step 6) over the claims the round's fixes changed or
+   added, since a fix can introduce a new error — including a new behavioral
+   claim no earlier fact-check saw. If the cap is reached with dissent
+   remaining, stop and present the unresolved verdicts to the user — do not keep
+   bending the text to chase the last holdout.
 
 9. **Verify** — Work through the profile's Verification section: perform any
    one-time wiring it lists, then run its checks.

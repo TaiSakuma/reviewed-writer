@@ -34,8 +34,9 @@ Four components chain at runtime:
    carries neither — it holds the rules for each round, not how many rounds.
 2. `skills/persona-review/SKILL.md` — one review round, invoked by `write-doc`
    at its review steps or standalone. It composes a self-contained review brief
-   to a temp file, then launches one `persona-reviewer` subagent per persona in
-   parallel and consolidates their reviews into a matrix.
+   to a temp file, launches one `persona-reviewer` subagent per persona in
+   parallel in a run's first round and continues them with what changed in later
+   rounds, and consolidates their reviews into a matrix.
 3. `agents/persona-reviewer.md` — a read-only subagent that reads and adopts the
    persona head file its task prompt names first, reviews each unit against its
    declared quadrant, and returns a tabular report headed by a ship/revise
