@@ -23,7 +23,7 @@ under `.github/`, and two JSON manifests.
 
 ## Architecture
 
-Three components chain at runtime:
+Four components chain at runtime:
 
 1. `skills/write-doc/SKILL.md` — the authoring orchestrator: scope → sources →
    rubric → structurally distinct drafts → persona panel → fact-check →
