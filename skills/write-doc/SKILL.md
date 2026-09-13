@@ -1,199 +1,73 @@
 ---
 name: write-doc
 description:
-  Author or substantially revise the repository's document via the
-  persona-review workflow
+  Author or substantially revise the repository's document by driving an engine
+  agent through scoping, drafting, review, and revision until its reviewers
+  approve
 ---
 
-Every repository-specific value lives in this repository's
-`.claude/rules/persona-review-profile.md` (the profile); read it first. The
-profile supplies, by section: Document, Personas, Declaration mechanism, Premise
-to pin, Sources, Fact-check targets, Status dimension, Verification, Record,
-Voice rules, and Extra guidelines. In this file, "the Diátaxis rules" refers to
-the shared review core at
-`${CLAUDE_PLUGIN_ROOT}/skills/persona-review/references/diataxis-review.md`, and
-"the voice rules" to the file named in the profile's Voice rules section.
+This skill is the orchestrator of a run and nothing else: it launches one engine
+agent, sends it one call at a time, enforces the run's cap, and relays what the
+engine reports to the user. It reads no repository file and holds no view of the
+document, the writing style, or the review process — the engine does that work
+and reports one outcome line per call.
 
-Before anything else, confirm the consumer-side files exist: the profile at that
-path, carrying every `##` section that
-`${CLAUDE_PLUGIN_ROOT}/templates/persona-review-profile.md` lists; the
-declaration file at `.claude/rules/diataxis-declaration.md`; every persona head
-file the profile's Personas section lists; and the voice-rules file its Voice
-rules section names. If any file is missing, or a profile section is absent or
-renamed, stop: report the missing path or heading to the user, name the matching
-template under `${CLAUDE_PLUGIN_ROOT}/templates/` to copy and fill in, and do
-not proceed on a guess or with invented contents.
+The run's three parameters are set here: **three drafts**, a re-review cap of
+**five rounds**, and the engine `reviewed-writer:diataxis-persona-engine`. The
+invocation overrides any of them, so a repository that wants different values on
+every run states them in the wrapper skill that invokes this one. A replacement
+engine must honor the call contract below. Two is the lowest draft count the
+engine's draft comparison works with.
 
-The run's two numbers are set here: **three drafts**, and a re-review cap of
-**five rounds**. The invocation overrides either, so a repository that wants
-different numbers on every run states them in the wrapper skill that invokes
-this one. Two is the lowest draft count the comparison in steps 5 and 7 works
-with.
+## Call contract
 
-Author (or substantially revise) the document defined in the profile's Document
-section using the persona-review workflow. A revision may be triggered by one
-change or one weak part, but drafting, review, and shipping cover the document
-as a whole. When the profile's Document section declares the **section set an
-output of the run**, sections are added, split, merged, and removed as the
-content requires. The goal is a document whose content serves its primary
-personas and is accurate; **accuracy beats style**. The review personas are
-defined by the persona head files listed in the profile's Personas section; the
-`reviewed-writer:persona-review` skill launches one reviewer per persona.
+Each message to the engine opens with the call name. The engine's reply opens
+with the outcome line; detail stays in the engine's run dir, and the reply names
+paths. `k` is the count of review rounds used and `N` the cap; the engine
+reports them, and this skill only compares them.
 
-Every unit of content is declared in a [Diátaxis](https://diataxis.fr/) quadrant
-(tutorial, how-to, reference, or explanation) as the profile's Declaration
-mechanism section directs; the Diátaxis rules hold the reader questions and the
-out-of-quadrant and out-of-scope rules. When the profile's Status dimension
-section is enabled, every unit also carries a **status** — _implemented_
-(describes current behavior; verified against the profile's Fact-check targets)
-or _spec_ (describes intended behavior; source of truth is a design brief
-supplied when the skill is invoked — a decision list or note that need not live
-in the repository).
+| Call     | Payload                                                                                                                             | Outcome lines                                                                                                                                         |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `scope`  | The document, the change driving the revision, the scoping the user supplied, a design brief or none, the draft count, and the cap. | `blocked — <missing path or heading>; copy <template path>`, or `scoped — run dir: <path>`, then the scope summary and the open questions, or `none`  |
+| `write`  | The answers to the open questions, or `none`.                                                                                       | `ready — document: <path>; rounds used: k of N; run dir: <path>`, or `blocked`                                                                        |
+| `review` | Nothing.                                                                                                                            | `approve — rounds used: k of N; …`, or `revise — rounds used: k of N; …`, then one line per dissenting reviewer with its single most important change |
+| `revise` | Nothing.                                                                                                                            | `ready — …`, as after `write`                                                                                                                         |
+| `finish` | Nothing.                                                                                                                            | `done — record: <where>; rounds used: k of N; unresolved: none\|<reviewers>`, then at most ten record lines                                           |
+| `resume` | The run dir.                                                                                                                        | The outcome of the stage the engine had reached                                                                                                       |
 
 ## Steps
 
-1. **Scope** — Confirm the change driving the revision, the unit of work, and
-   what is out of scope; state the run's draft count and re-review cap — the
-   defaults above, unless the invocation sets others; confirm the primary
-   personas (whose verdicts outweigh the others when fixes conflict) as the
-   profile's Personas section directs; and confirm the declared quadrant(s) per
-   the Declaration mechanism, noting the matching reader question(s) from the
-   Diátaxis rules. Apply any scoping notes in the profile's Document section.
-   When the section set is an output of the run, sketch the target section set —
-   starting from the current declarations, adding, splitting, merging, or
-   removing sections as the content requires — and declare each section's
-   quadrant. When the status dimension is enabled, confirm the change's status;
-   for spec status, capture the design decisions the text must encode into the
-   review brief (step 5) so the brief is self-contained.
+1. **Scope** — Launch the engine with the Agent tool, `subagent_type` set to the
+   engine's name, and the `scope` call. Keep the engine's agent ID, the run dir,
+   `k`, `N`, and the document path — nothing else. On `blocked`, relay the line
+   to the user and stop. On `scoped`, relay the scope summary; when the reply
+   lists open questions, put them to the user and collect the answers.
 
-2. **Gather sources** — Collect the raw material listed in the profile's Sources
-   section.
+2. **Write** — Send `write` with the answers, or `none`. On `ready`, note `k`
+   and the document path.
 
-3. **Rubric** — Itemize what the document must say (Content), must be true
-   (Accuracy), must exclude (Exclusions), and must satisfy editorially (the
-   voice rules). When the trigger named in the profile's Premise to pin section
-   applies, pin the named premise first. Every draft inherits the premise, so a
-   wrong one poisons them identically and the persona pass will not reliably
-   catch it; settle the premise before drafting, against the authority the
-   profile names, if it names one.
+3. **Iterate** — Send `review`. On `approve`, go to step 4. On `revise` with `k`
+   equal to `N`, the cap is reached: relay the dissent lines to the user as the
+   unresolved verdicts and go to step 4 — do not keep bending the text to chase
+   the last holdout. Otherwise send `revise`, expect `ready`, and repeat this
+   step.
 
-4. **Diverse drafts** — Write as many structurally distinct drafts of the whole
-   document as the run's draft count (step 1) sets, all meeting the rubric, to
-   temp files. When the section set is an output of the run, structure is part
-   of the variation: drafts may differ in how many sections exist and how
-   content is distributed among them, as long as each draft keeps its
-   declarations valid per the Declaration mechanism and declares its own
-   structure. Otherwise, vary only the framing and order.
-
-5. **Parallel persona review** — Invoke the `reviewed-writer:persona-review`
-   skill over the drafts: it composes the shared review brief from the run state
-   and the profile, launches one reviewer per persona in parallel — the
-   reviewers the run's later rounds continue — collects the reviews, and
-   consolidates them into a matrix. Read this round's reviews for lens-relevance
-   and accuracy; treat comments on framing or altitude as input to the synthesis
-   (step 7), not as fixes to apply per draft — the drafts differ in framing by
-   design, so a framing critique of one draft mainly informs which framing to
-   keep, and the re-review (step 8) judges the framing of the document that will
-   ship.
-
-6. **Fact-check** — Verify every claim and code example against the targets in
-   the profile's Fact-check targets section, applying its checking notes. When
-   the status dimension is enabled, verify spec content against the design
-   decisions in the brief, and verify implementability on the platform the
-   profile names: a behavior the platform cannot deliver as written is a
-   blocking defect. Accuracy beats style.
-
-7. **Synthesize or select** — First, if the review surfaced a flaw shared by
-   every draft (most often a flaw in the pinned premise), fix it across the
-   drafts and re-review until the shared flaw is gone before proceeding — the
-   diverse drafts only help once the shared premise is right. These rounds count
-   against the run's re-review cap (step 1), which budgets all re-review rounds
-   across this step and step 8, so spend them here only on a genuinely shared
-   flaw. Then produce the document: when strengths are split across drafts,
-   merge the per-axis winners; when one draft is strongest on most axes, take it
-   as the base and graft only the specific wins from the others. Merging adds
-   seams, so do not merge for its own sake. Produce it at the document's own
-   path from the draft files — copy the base draft there, or assemble the
-   winning sections from their files — and edit it in place; do not retype text
-   a draft already holds. Apply cross-cutting fixes and write the final text
-   yourself, following the voice rules — persona-suggested wording is advisory.
-   An ask a persona flagged out of scope, and any content flagged as out of
-   quadrant, is routed to the destination named in the profile's Declaration
-   mechanism section — not folded in where it does not belong.
-
-8. **Re-review the resulting document** — The draft review (step 5) does not
-   cover the text you will ship: a merge can inherit a weakness shared by every
-   draft, and a chosen-and-edited draft carries changes no reviewer saw. Invoke
-   the `reviewed-writer:persona-review` skill again on the resulting document
-   (same request; the declarations travel with the text as the Declaration
-   mechanism directs, however much a round has changed): it continues the draft
-   round's reviewers rather than launching new ones — a full report from each on
-   the synthesized text, the follow-up form in later rounds — so a round costs a
-   re-read and a reply per persona. Apply the genuine fixes within the declared
-   quadrant(s) as targeted edits, never by rewriting the document, recording for
-   each flag row whether it was applied or declined with the reason, a
-   structural row against a fixed section set being declined for scoping and
-   carried to the record (step 10) — the next round's follow-ups carry that —
-   and re-review, iterating until a round returns a "ship" verdict from every
-   persona on the text as it stands, up to the run's re-review cap (step 1;
-   rounds spent in step 7 count against it). Each round, re-run the checks in
-   the profile's Verification section, and re-run the fact-check (step 6) over
-   the claims the round's fixes changed or added, since a fix can introduce a
-   new error — including a new behavioral claim no earlier fact-check saw. If
-   the cap is reached with dissent remaining, stop and present the unresolved
-   verdicts to the user — do not keep bending the text to chase the last
-   holdout.
-
-9. **Verify** — Work through the profile's Verification section: perform any
-   one-time wiring it lists, then run its checks.
-
-10. **Record** — Record the run as the profile's Record section directs,
-    including the draft count and re-review cap the run used. When the status
-    dimension is enabled, list the claims that describe intended behavior in the
-    implementation plan, so each is re-verified against the shipped
-    implementation.
+4. **Finish** — Send `finish` and relay the `done` lines to the user as the run
+   report.
 
 ## Guidelines
 
-- A unit of content is written well when its primary personas find what they
-  need and the others can tell early that it is not for them while still seeing
-  it is useful to its own readers.
-- Content is not obligated to serve every persona, and the document does not owe
-  any persona content. The correct review from a low-relevance persona is `low`
-  relevance and a ship verdict — not asks that bend the document toward its
-  lens. When personas' fixes conflict, the primary personas from step 1 win.
-- When the section set is an output of the run: relocating out-of-quadrant
-  content, creating the section a quadrant needs, and removing a section that no
-  longer serves anyone are actions the run takes, guided by persona feedback.
-  Removal has exactly two legitimate sources: a persona speaking as the
-  section's own audience (duplication, void purpose, vanished subject), or the
-  consolidated matrix showing a section every persona finds low-relevance — the
-  latter is the orchestrator's judgment at synthesis, never a single
-  low-relevance persona's ask. Every section-set change is listed in the report;
-  an ask the run chooses not to serve is reported with a keep/drop
-  recommendation for the user.
-- When the status dimension is enabled: the design decisions in the brief are
-  settled for spec content. A persona ask that would change a decision is design
-  feedback — surface it in the report for the user to rule on; never fold it
-  into the text as if settled. A spec unit binds the implementation: after the
-  implementation ships, a difference between behavior and the text is either an
-  implementation bug or a change that re-enters this skill — never a silent doc
-  drift.
-- Declarations, their granularity, and what counts as a sanctioned combination
-  of quadrants follow the profile's Declaration mechanism section; undeclared
-  cross-quadrant content is out of quadrant. Personas review and route by
-  quadrant per the Diátaxis rules: a lens asking for content outside a unit's
-  declared mode — for example runnable how-to steps in explanation content — is
-  out of scope, not a defect; route it (and any out-of-quadrant content) to the
-  destination the profile names instead of folding it in. Out-of-quadrant
-  content is relocated or routed, never polished in place.
-- Voice and formatting follow the voice rules; the orchestrator writes the final
-  text, not the personas.
-- The orchestrator's context is the run's scarcest resource. Keep command output
-  out of it: send a check's output to a file and print its exit status and
-  failing lines; compare versions with `--stat` or a diff of the changed
-  section; read the document under review once per round and work from the
-  matrix's citations. When a search settles a question, count the matches first
-  and never truncate the output — a cut-off search turns present evidence into
-  apparent absence.
-- Apply the additional guidelines in the profile's Extra guidelines section.
+- Relay every outcome line verbatim, with its run dir and `k of N`, as it
+  arrives: a subagent's messages are not shown to the user, and the relay keeps
+  the values through context compaction.
+- Wait for the engine's reply; never poll. Continue the engine with the
+  SendMessage tool, addressed by its agent ID, not its name.
+- Never open the brief, the matrix, the drafts, or the record; relay their
+  paths.
+- A reply without an outcome line gets one message asking for it; a second such
+  reply counts as a lost engine.
+- When a send is refused or the engine is lost, launch a fresh engine with the
+  `resume` call and the run dir; its reply is the outcome the interrupted call
+  would have produced. Continue from there.
+- Act on the outcome line alone. The domain content of a reply is the engine's
+  to produce and the user's to read.

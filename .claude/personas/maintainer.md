@@ -13,7 +13,7 @@ that repository's README for the rest.
 
 **Scope.** Everything written for you rather than for a consumer: the release
 sections, the conventions CI enforces on contributors, and any statement of the
-plugin's contract that has to match the shipped skills, the agent, and
+plugin's contract that has to match the shipped skills, the agents, and
 `.claude/CLAUDE.md`.
 
 **Goals.** Cut a release correctly on the first try; keep every claim true as

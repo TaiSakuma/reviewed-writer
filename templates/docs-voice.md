@@ -5,8 +5,7 @@ paths:
 
 <!--
 Copy this file to the path the profile's Voice rules section names, for example
-`.claude/rules/docs-voice.md`. The `write-doc` skill applies these rules when it
-writes the final text; persona wording is advisory against them. The `paths:`
+`.claude/rules/docs-voice.md`. The `write-doc` run's engine applies these rules when it writes the final text; persona wording is advisory against them. The `paths:`
 frontmatter above is a Claude Code rule scope and is optional: it loads the file
 into sessions that touch the listed documents, and it must stay at the top of
 the file. Delete these comments once the rules are written.
@@ -42,6 +41,6 @@ prose, not to code, manifests, or commit messages.
 
 ## During persona review
 
-Persona-suggested wording is advisory; the orchestrator writes the final text
-itself. A persona ask that conflicts with this file is resolved in favor of this
-file unless the user rules otherwise.
+Persona-suggested wording is advisory; the engine writes the final text itself.
+A persona ask that conflicts with this file is resolved in favor of this file
+unless the user rules otherwise.
