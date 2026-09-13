@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.5.0] - 2026-09-13
+
+### Refactoring
+
+- Extract an agent from the skill `write-doc` ([#14](https://github.com/TaiSakuma/reviewed-writer/pull/14))
+- Split the engine into writer and panel agents ([#15](https://github.com/TaiSakuma/reviewed-writer/pull/15))
+
+
 ## [0.4.0] - 2026-09-13
 
 ### Performance
