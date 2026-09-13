@@ -484,26 +484,29 @@ and a persona nobody updates does not fail loudly — it keeps shipping confiden
 verdicts from a reader who no longer exists. A run's cost scales with the panel
 the profile's `Personas` section lists: the draft round launches one read-only
 reviewer per persona, and one review is one subagent reading its persona head
-file, the run's brief, and the text under review — every draft in the draft
-round; each later round continues the same reviewers with what changed, so it
-costs a follow-up per persona, not a fresh review. The panel runs in parallel,
+file, the run's brief, and the text under review — the whole document, or every
+draft in the draft round; each later round continues the same reviewers with
+what changed: a full report on the synthesized document, then a re-read and a
+short reply per persona, rather than a fresh review each time, though a
+continued reviewer's context grows with each round. The panel runs in parallel,
 and the orchestrator writes each draft in full before the panel sees it. A full
 `write-doc` run adds a panel pass over the drafts to the re-review rounds, up to
 the cap. At the default draft count and cap — three and five — with six
-personas, that is at most six panel rounds — six full reviews and up to 30
-follow-ups — for one document; a panel of one is valid and costs a sixth of
-that. The checked-in files serve the whole repository, while a run covers the
-document the profile's `Document` section sets as its unit of work, so the setup
-is authored once and the run cost repeats for each document revised. Lowering
-the cap at invocation lowers the ceiling; lowering the draft count lowers how
-much each reviewer reads, not how many reviews run. The workflow fits documents
-revised deliberately for distinct audiences; it is a poor fit for documentation
-that changes daily, or a repository unwilling to keep persona definitions
-current. A run is driven from a session: it settles scope with you and hands
-unresolved dissent back to you, so it is an authoring step, not a check that can
-gate a pull request. The exit is bounded: the profile, the declaration rules,
-the personas, the voice rules, and the documents stay in the consuming
-repository, so dropping the plugin forfeits the machinery, not the content.
+personas, that is at most six panel rounds — six full reviews of the drafts, six
+full reports on the synthesized text, and up to 24 follow-ups — for one
+document; a panel of one is valid and costs a sixth of that. The checked-in
+files serve the whole repository, while a run covers the document the profile's
+`Document` section sets as its unit of work, so the setup is authored once and
+the run cost repeats for each document revised. Lowering the cap at invocation
+lowers the ceiling; lowering the draft count lowers how much each reviewer
+reads, not how many reviews run. The workflow fits documents revised
+deliberately for distinct audiences; it is a poor fit for documentation that
+changes daily, or a repository unwilling to keep persona definitions current. A
+run is driven from a session: it settles scope with you and hands unresolved
+dissent back to you, so it is an authoring step, not a check that can gate a
+pull request. The exit is bounded: the profile, the declaration rules, the
+personas, the voice rules, and the documents stay in the consuming repository,
+so dropping the plugin forfeits the machinery, not the content.
 
 ## 📖 Provenance
 

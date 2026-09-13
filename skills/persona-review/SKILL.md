@@ -45,27 +45,33 @@ not proceed on a guess or with invented contents.
    declared quadrant(s) and matching reader question(s), carried as the
    profile's Declaration mechanism section directs; when the status dimension is
    enabled, each unit's status, and the design decisions for spec content — the
-   brief is self-contained; what is in and out of scope; the rubric, when the
-   request has one; verified facts; link targets; and the path of the Diátaxis
-   core, so reviewers read the core from the brief. Reviewers never depend on
-   files outside the repository, this skill, and the brief. In a run's later
-   rounds, update the existing brief in place — the draft path(s), the verified
-   facts, what the round changed — rather than composing a new one; its path
-   stays the same.
+   brief is self-contained; what is in and out of scope, and whether the section
+   set is an output of the run; the rubric, when the request has one; verified
+   facts; link targets; and the path of the Diátaxis core, so reviewers read the
+   core from the brief. Reviewers never depend on files outside the repository,
+   this skill, and the brief. In a run's later rounds, update the existing brief
+   in place — the draft path(s), the verified facts, what the round changed —
+   rather than composing a new one; its path stays the same.
 
 3. **Launch or continue the panel.** In a run's first round, launch one
    `reviewed-writer:persona-reviewer` subagent per persona in the request via
    the Agent tool's `subagent_type`, all in parallel, and keep each reviewer's
    agent ID for the run. Each task prompt gives, in order, the path of the
    persona's head file from the profile's Personas section, the brief path, and
-   the draft path(s). In every later round, message each persona's existing
-   reviewer instead of launching a new one, all in one message so they run in
-   parallel: the path of the text now under review, the units changed since its
-   last review, and its earlier flag rows by matrix number with their
-   disposition; it re-reads the text from its own context and returns the
-   follow-up form. Wait for the replies; never poll. Launch afresh only a
-   reviewer that no longer exists, and it does a full review. The report's shape
-   is the agent's own contract; do not restate it.
+   the draft path(s). In every later round, continue each persona's existing
+   reviewer with the SendMessage tool instead of launching a new one, all in one
+   message so they run in parallel: the path of the text now under review, the
+   units changed since its last review, the brief path when the brief changed
+   since then, and its earlier flag rows by matrix number with their
+   disposition; say when the text is new to it, as after synthesis; it re-reads
+   the text at that path and returns the follow-up form, or the full report when
+   the text is new. Wait for the replies; never poll. Launch afresh only a
+   reviewer that no longer exists, with the first-round task prompt's shape —
+   the head file path, the brief path, and the path of the text now under review
+   — plus its earlier rows and their dispositions; it does a full review. If the
+   session cannot continue reviewers, say so in the report — the run's rounds
+   then cost full reviews. The report's shape is the agent's own contract; do
+   not restate it.
 
 4. **Collect and consolidate.** If a reviewer errors out, returns no `Verdict:`
    line, or cannot be continued, re-launch it — do not treat a missing verdict
@@ -76,6 +82,11 @@ not proceed on a guess or with invented contents.
    then the flag rows, numbered across the run, `blocking` first, grouped by
    unit, one row per finding naming the personas raising it and keeping its
    kind, destination, and fix. In a later round, update the previous matrix
-   rather than rebuilding it: replace each persona's verdict line, mark earlier
-   rows landed or still open as the follow-ups report, and append new rows with
-   the next numbers. Report the matrix to the caller.
+   rather than rebuilding it: replace each persona's verdict line and, with a
+   rubric over drafts, its scores; mark earlier rows landed, withdrawn, or still
+   open as the follow-ups report — a shared row stays open while any persona
+   that raised it holds it open; merge a re-raised finding into its existing row
+   and otherwise append new rows with the next numbers, a relaunched reviewer's
+   name leaving the rows it no longer holds; and when the text is new to the
+   reviewers, rebuild the relevance grid from their full Units tables and drop
+   the draft scores. Report the matrix to the caller.

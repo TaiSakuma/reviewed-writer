@@ -112,14 +112,14 @@ in the repository).
    flaw. Then produce the document: when strengths are split across drafts,
    merge the per-axis winners; when one draft is strongest on most axes, take it
    as the base and graft only the specific wins from the others. Merging adds
-   seams, so do not merge for its own sake. Produce it from the draft files —
-   copy the base draft, or assemble the winning sections from their files — and
-   edit in place; do not retype text a draft already holds. Apply cross-cutting
-   fixes and write the final text yourself, following the voice rules —
-   persona-suggested wording is advisory. An ask a persona flagged out of scope,
-   and any content flagged as out of quadrant, is routed to the destination
-   named in the profile's Declaration mechanism section — not folded in where it
-   does not belong.
+   seams, so do not merge for its own sake. Produce it at the document's own
+   path from the draft files — copy the base draft there, or assemble the
+   winning sections from their files — and edit it in place; do not retype text
+   a draft already holds. Apply cross-cutting fixes and write the final text
+   yourself, following the voice rules — persona-suggested wording is advisory.
+   An ask a persona flagged out of scope, and any content flagged as out of
+   quadrant, is routed to the destination named in the profile's Declaration
+   mechanism section — not folded in where it does not belong.
 
 8. **Re-review the resulting document** — The draft review (step 5) does not
    cover the text you will ship: a merge can inherit a weakness shared by every
@@ -127,19 +127,22 @@ in the repository).
    the `reviewed-writer:persona-review` skill again on the resulting document
    (same request; the declarations travel with the text as the Declaration
    mechanism directs, however much a round has changed): it continues the draft
-   round's reviewers rather than launching new ones, so a round costs one
-   follow-up per persona. Apply the genuine fixes within the declared
+   round's reviewers rather than launching new ones — a full report from each on
+   the synthesized text, the follow-up form in later rounds — so a round costs a
+   re-read and a reply per persona. Apply the genuine fixes within the declared
    quadrant(s) as targeted edits, never by rewriting the document, recording for
-   each flag row whether it was applied or declined with the reason — the next
-   round's follow-ups carry that — and re-review, iterating until a round
-   returns a "ship" verdict from every persona on the text as it stands, up to
-   the run's re-review cap (step 1; rounds spent in step 7 count against it).
-   Each round, re-run the checks in the profile's Verification section, and
-   re-run the fact-check (step 6) over the claims the round's fixes changed or
-   added, since a fix can introduce a new error — including a new behavioral
-   claim no earlier fact-check saw. If the cap is reached with dissent
-   remaining, stop and present the unresolved verdicts to the user — do not keep
-   bending the text to chase the last holdout.
+   each flag row whether it was applied or declined with the reason, a
+   structural row against a fixed section set being declined for scoping and
+   carried to the record (step 10) — the next round's follow-ups carry that —
+   and re-review, iterating until a round returns a "ship" verdict from every
+   persona on the text as it stands, up to the run's re-review cap (step 1;
+   rounds spent in step 7 count against it). Each round, re-run the checks in
+   the profile's Verification section, and re-run the fact-check (step 6) over
+   the claims the round's fixes changed or added, since a fix can introduce a
+   new error — including a new behavioral claim no earlier fact-check saw. If
+   the cap is reached with dissent remaining, stop and present the unresolved
+   verdicts to the user — do not keep bending the text to chase the last
+   holdout.
 
 9. **Verify** — Work through the profile's Verification section: perform any
    one-time wiring it lists, then run its checks.

@@ -30,13 +30,15 @@ document that belongs to another quadrant as out-of-quadrant content to
 relocate; and list each unit you reviewed with the declaration you read for it,
 reporting a missing or misplaced declaration as a defect. Structural
 recommendations — a unit to add, split, merge, or remove — are legitimate
-feedback; report them explicitly as structural. The declared quadrant itself is
-fixed for your review: judge the content against it, never the declaration
-against the content. Recommend merging or removing a unit only from the position
-of its own audience — even for its own readers it duplicates another unit, has
-no purpose left once out-of-quadrant content is relocated, or documents
-something that no longer exists — never because it is not for you: "not for me"
-is a relevance report, not a removal case.
+feedback; report them explicitly as structural, and when the brief says the
+section set is fixed, as a scoping proposal: raised once, then listed under
+`Withdrawn:` once its disposition reads declined for scoping. The declared
+quadrant itself is fixed for your review: judge the content against it, never
+the declaration against the content. Recommend merging or removing a unit only
+from the position of its own audience — even for its own readers it duplicates
+another unit, has no purpose left once out-of-quadrant content is relocated, or
+documents something that no longer exists — never because it is not for you:
+"not for me" is a relevance report, not a removal case.
 
 **When the unit is not for you.** Not every unit serves your persona; the
 document as a whole does. When your relevance is low, report it as such and
@@ -86,13 +88,18 @@ all.
 Length follows the findings, not a target: merge duplicate findings into one row
 and shorten cells, but never leave a finding out.
 
-**Follow-up.** When the orchestrator continues you with a later round — the text
-under review, the units changed since your last review, and your earlier rows by
-matrix number with their disposition — re-read the whole text: a fix that did
-not land, and a declined row you still hold, are rows again. Reply with the
-follow-up form and nothing else: the `Verdict` line; `Landed:` and `Open:`, each
-the earlier row numbers it applies to or `none`; new Flags rows, unnumbered; the
-Units table only for units whose marker or your relevance changed. Your earlier
-verdict is a record, not a commitment: a change you would not ship is a
-`blocking` row whatever you said before, and so is anything new you notice on
-unchanged text.
+**Follow-up.** When the orchestrator continues you with a later round — the path
+of the text under review, the units changed since your last review, the brief
+path when the brief changed, and your earlier rows by matrix number with their
+disposition — re-read the text at that path, and the brief when it changed: a
+fix that did not land, and a declined row you still hold, are rows again. Reply
+with the follow-up form and nothing else: the `Verdict` line; `Landed:`,
+`Open:`, and `Withdrawn:`, each the earlier row numbers it applies to or `none`;
+Scores, when the brief carries a rubric and several drafts are under review; new
+Flags rows, unnumbered; the Units table for units that are new or whose marker
+or your relevance changed; and the Self-check. When the text is new to you — the
+synthesized document after a draft round — reply with the full report instead,
+plus the `Landed:`, `Open:`, and `Withdrawn:` lines; a launch prompt that
+carries earlier rows is handled the same way. Your earlier verdict is a record,
+not a commitment: a change you would not ship is a `blocking` row whatever you
+said before, and so is anything new you notice on unchanged text.
