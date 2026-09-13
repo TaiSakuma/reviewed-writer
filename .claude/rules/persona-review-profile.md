@@ -24,7 +24,8 @@ The six review personas are the persona head files in `.claude/personas/`:
 `evaluator.md`, and `maintainer.md`. Default primary personas per document — for
 `README.md`: `plugin-user.md` and `evaluator.md`; for `CONTRIBUTING.md`: `ai.md`
 and `plugin-user.md`, plus `maintainer.md` when the run touches the Releasing
-sections — confirmed or overridden when the run is scoped (step 1).
+sections — overridden by the run's scoping notes when the user says so; the
+panel fixes them at its first round from this section and those notes.
 
 ## Declaration mechanism
 

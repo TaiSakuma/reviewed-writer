@@ -31,7 +31,7 @@ and do not proceed on a guess or with invented contents.
 
 The run's draft count arrives in the `scope` call; `write-doc` sets it, and
 `write-doc` enforces the run's re-review cap. Two is the lowest draft count the
-comparison in steps 5 and 7 works with.
+comparison in step 7 works with.
 
 Author (or substantially revise) the document defined in the profile's Document
 section using the persona-review workflow. A revision may be triggered by one
@@ -64,14 +64,14 @@ are the one channel, and `write-doc` puts them to the user and sends the answers
 with `write`. You launch nothing and invoke no skill: the panel reviews the
 text, and you never review it in the panel's place.
 
-| Call         | You do                                                                                                                                                                                                                                                                                                              | Outcome line                                                                                                                                         |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `scope`      | The preflight, then step 1. The payload carries the document, the change driving the revision, scoping notes, a design brief or none, and the draft count.                                                                                                                                                          | `blocked — <missing path or heading>; copy <template path>`, or `scoped — run dir: <path>`, then the scope summary and the open questions, or `none` |
-| `write`      | Steps 2–4, with the answers to the open questions; `scope.md` is complete before you reply.                                                                                                                                                                                                                         | `drafted — drafts: <paths>; run dir: <path>`, or `blocked`                                                                                           |
-| `synthesize` | Steps 6–7 from the matrix the payload names. The payload also says whether another draft round is `available` or `none`.                                                                                                                                                                                            | `again — drafts: <paths>`, only when the payload said `available`; or `ready — document: <path>`; or `blocked`                                       |
-| `revise`     | Step 8 from the matrix the payload names.                                                                                                                                                                                                                                                                           | `ready — document: <path>`                                                                                                                           |
-| `finish`     | Steps 9–10. The payload carries `rounds used: k of N` and the unresolved verdicts, or `none`.                                                                                                                                                                                                                       | `done — record: <where>; unresolved: none\|<reviewers>`, then at most ten record lines                                                               |
-| `resume`     | The payload names the run dir and repeats the interrupted call line. Read `run.md` there: if it records that call as answered, reply with the recorded outcome; otherwise perform the call from the last completed step and reply with its outcome. If the run dir holds `matrix.md`, the panel's rounds are in it. | The outcome of the interrupted call                                                                                                                  |
+| Call         | You do                                                                                                                                                                                                                                                                                                                                                                     | Outcome line                                                                                                                                         |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `scope`      | The preflight, then step 1. The payload carries the document, the change driving the revision, scoping notes, a design brief or none, and the draft count.                                                                                                                                                                                                                 | `blocked — <missing path or heading>; copy <template path>`, or `scoped — run dir: <path>`, then the scope summary and the open questions, or `none` |
+| `write`      | Steps 2–4, with the answers to the open questions; `scope.md` is complete before you reply.                                                                                                                                                                                                                                                                                | `drafted — drafts: <paths>; run dir: <path>`, or `blocked`                                                                                           |
+| `synthesize` | Steps 6–7 from the matrix the payload names. The payload also says whether another draft round is `available` or `none`.                                                                                                                                                                                                                                                   | `again — drafts: <paths>`, only when the payload said `available`; or `ready — document: <path>`; or `blocked`                                       |
+| `revise`     | Step 8 from the matrix the payload names.                                                                                                                                                                                                                                                                                                                                  | `ready — document: <path>`, or `blocked`                                                                                                             |
+| `finish`     | Steps 9–10. The payload carries `rounds used: k of N` and the unresolved verdicts, or `none`.                                                                                                                                                                                                                                                                              | `done — record: <where>; unresolved: none\|<reviewers>`, then at most ten record lines; or `blocked`                                                 |
+| `resume`     | The payload names the run dir and repeats the interrupted call line. Read `run.md` there: if it records that call as answered, reply with the recorded outcome; otherwise perform the call from the last completed step and reply with its outcome. If the run dir holds `matrix.md`, the panel's rounds are in it. When the interrupted call is `scope`, perform `scope`. | The outcome of the interrupted call                                                                                                                  |
 
 **The run dir.** At `scope`, create one directory with `mktemp -d` and keep
 everything you produce there: the drafts, the rubric, `run.md`, `scope.md`, and
@@ -80,14 +80,17 @@ same directory; read them, never write them.
 
 - `run.md` — your state, for a fresh writer to resume from: the document path;
   the draft count; the scope decisions; the paths of the drafts and the rubric;
-  the call in progress and the stage reached. Write the received call line into
-  it before doing anything else, and rewrite it before every reply and at each
-  step boundary inside a call — after the rubric, after the drafts, after the
-  fact-check, after synthesis — so a writer lost mid-call resumes from the last
-  completed step.
+  the call in progress, the stage reached, and, once a call is answered, its
+  outcome line. Write the received call line into it before doing anything else,
+  and rewrite it before every reply — carrying the outcome line the reply will
+  open with — and at each step boundary inside a call — after the rubric, after
+  the drafts, after the fact-check, after synthesis — so a writer lost mid-call
+  resumes from the last completed step.
 - `scope.md` — what the panel needs to compose a self-contained review brief:
   the document's identity and purpose, from the profile's Document section; the
-  change driving the revision; what is in and out of scope; whether the section
+  change driving the revision; the scoping notes as the `scope` call supplied
+  them and the answers `write` brought, verbatim — the panel fixes the personas
+  and the primaries from them; what is in and out of scope; whether the section
   set is fixed or an output of the run, with the target section set when it is
   an output; when the status dimension is enabled, each unit's status — or,
   while the drafts differ in structure, the change's status and the rule that

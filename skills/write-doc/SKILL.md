@@ -34,18 +34,18 @@ the outcome line; detail stays in the run dir, and the reply names paths. A
 | `scope`      | The document, the change driving the revision, the scoping the user supplied, a design brief or none, and the draft count. | `blocked — <missing path or heading>; copy <template path>`, or `scoped — run dir: <path>`, then the scope summary and the open questions, or `none` |
 | `write`      | The answers to the open questions, or `none`.                                                                              | `drafted — drafts: <paths>; run dir: <path>`, or `blocked`                                                                                           |
 | `synthesize` | `matrix: <path>; another draft round: available\|none`.                                                                    | `again — drafts: <paths>`, valid only after `available`; or `ready — document: <path>`; or `blocked`                                                 |
-| `revise`     | `matrix: <path>`.                                                                                                          | `ready — document: <path>`                                                                                                                           |
-| `finish`     | `rounds used: k of N; unresolved: none\|<dissent lines>`.                                                                  | `done — record: <where>; unresolved: none\|<reviewers>`, then at most ten record lines                                                               |
+| `revise`     | `matrix: <path>`.                                                                                                          | `ready — document: <path>`, or `blocked`                                                                                                             |
+| `finish`     | `rounds used: k of N; unresolved: none\|<dissent lines>`.                                                                  | `done — record: <where>; unresolved: none\|<reviewers>`, then at most ten record lines; or `blocked`                                                 |
 | `resume`     | `run dir: <path>; call: <the interrupted call line verbatim>`.                                                             | The outcome of the interrupted call                                                                                                                  |
 
 ### The panel
 
-| Call     | Payload                                                                           | Outcome lines                                                                                                                                                                                                          |
-| -------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `scope`  | The document, the change driving the revision, and the scoping the user supplied. | `blocked — <missing path or heading>; copy <template path>`, or `blocked — cannot launch reviewers`, or `scoped — personas: <n>`                                                                                       |
-| `review` | `run dir: <path>; drafts: <paths>`.                                               | `reviewed — matrix: <path>; reviewers: launched\|continued\|relaunched`, then a verdict summary, or `blocked`                                                                                                          |
-| `review` | `run dir: <path>; document: <path>`.                                              | `approve — matrix: <path>; reviewers: continued\|relaunched`, or `revise — matrix: <path>; reviewers: continued\|relaunched` then one line per dissenting reviewer with its single most important change, or `blocked` |
-| `resume` | `run dir: <path>; call: <the interrupted call line verbatim>`.                    | The outcome of the interrupted call                                                                                                                                                                                    |
+| Call     | Payload                                                        | Outcome lines                                                                                                                                                                                                          |
+| -------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `scope`  | The document and the change driving the revision.              | `blocked — <missing path or heading>; copy <template path>`, or `blocked — cannot launch reviewers`, or `scoped — personas: <n>`                                                                                       |
+| `review` | `run dir: <path>; drafts: <paths>`.                            | `reviewed — matrix: <path>; reviewers: launched\|continued\|relaunched`, then a verdict summary, or `blocked`                                                                                                          |
+| `review` | `run dir: <path>; document: <path>`.                           | `approve — matrix: <path>; reviewers: continued\|relaunched`, or `revise — matrix: <path>; reviewers: continued\|relaunched` then one line per dissenting reviewer with its single most important change, or `blocked` |
+| `resume` | `run dir: <path>; call: <the interrupted call line verbatim>`. | The outcome of the interrupted call                                                                                                                                                                                    |
 
 ### Rounds
 
@@ -104,7 +104,7 @@ when the call is sent, so a resumed review counts once. Another draft round is
 - When a send is refused or an agent is lost, launch a fresh agent of the same
   name with the `resume` call, the run dir, and the interrupted call line; its
   reply is the outcome the interrupted call would have produced. The other agent
-  keeps its ID. Continue from there. If no run dir was ever reported — the agent
-  was lost during `scope` — launch again with `scope` instead.
+  keeps its ID. Continue from there. An agent lost during its own `scope` call
+  is launched again with `scope`, whatever the other agent reported.
 - Act on the outcome line alone. The domain content of a reply is the agents' to
   produce and the user's to read.
