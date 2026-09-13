@@ -25,7 +25,9 @@ file the profile's Personas section lists; and the voice-rules file its Voice
 rules section names. If any file is missing, or a profile section is absent or
 renamed, stop: reply `blocked`, naming the missing path or heading and the
 matching template under `${CLAUDE_PLUGIN_ROOT}/templates/` to copy and fill in,
-and do not proceed on a guess or with invented contents.
+and do not proceed on a guess or with invented contents. Confirm also that the
+Agent tool is available to you; if it is not, reply
+`blocked — cannot launch reviewers` now, before any drafting.
 
 The run's draft count and re-review cap arrive in the `scope` call; `write-doc`
 sets them and enforces the cap. Two is the lowest draft count the comparison in
@@ -60,14 +62,14 @@ alone. You cannot ask the user anything yourself; the open questions of `scoped`
 are the one channel, and `write-doc` puts them to the user and sends the answers
 with `write`.
 
-| Call     | You do                                                                                                                                                                                                        | Outcome line                                                                                                                                                                                                       |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `scope`  | The preflight, then step 1. The payload carries the document, the change driving the revision, scoping notes, a design brief or none, the draft count, and the cap.                                           | `blocked — <missing path or heading>; copy <template path>`, or `scoped — run dir: <path>`, then the scope summary and the open questions, or `none`                                                               |
-| `write`  | Steps 2–7, with the answers to the open questions.                                                                                                                                                            | `ready — document: <path>; rounds used: k of N; run dir: <path>`, or `blocked`                                                                                                                                     |
-| `review` | Step 8's review half: one panel round on the document as it stands.                                                                                                                                           | `approve — rounds used: k of N; reviewers: continued\|relaunched`, or `revise — rounds used: k of N; reviewers: continued\|relaunched`, then one line per dissenting persona with its single most important change |
-| `revise` | Step 8's revise half.                                                                                                                                                                                         | `ready — …`, as after `write`                                                                                                                                                                                      |
-| `finish` | Steps 9–10.                                                                                                                                                                                                   | `done — record: <where>; rounds used: k of N; unresolved: none\|<personas>`, then at most ten record lines                                                                                                         |
-| `resume` | The payload names the run dir. Read `run.md` there, finish the interrupted stage, and reply with that stage's outcome. Try the reviewer IDs it records; `persona-review` relaunches any that no longer exist. | The outcome of the resumed stage                                                                                                                                                                                   |
+| Call     | You do                                                                                                                                                                                                        | Outcome line                                                                                                                                                                                                                                               |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `scope`  | The preflight, then step 1. The payload carries the document, the change driving the revision, scoping notes, a design brief or none, the draft count, and the cap.                                           | `blocked — <missing path or heading>; copy <template path>` or `blocked — cannot launch reviewers`, or `scoped — run dir: <path>`, then the scope summary and the open questions, or `none`                                                                |
+| `write`  | Steps 2–7, with the answers to the open questions.                                                                                                                                                            | `ready — document: <path>; rounds used: k of N; run dir: <path>`, or `blocked`                                                                                                                                                                             |
+| `review` | Step 8's review half: one panel round on the document as it stands.                                                                                                                                           | `approve — rounds used: k of N; reviewers: continued\|relaunched`, or `revise — rounds used: k of N; reviewers: continued\|relaunched`, then one line per dissenting persona with its single most important change, or `blocked — cannot launch reviewers` |
+| `revise` | Step 8's revise half.                                                                                                                                                                                         | `ready — …`, as after `write`                                                                                                                                                                                                                              |
+| `finish` | Steps 9–10.                                                                                                                                                                                                   | `done — record: <where>; rounds used: k of N; unresolved: none\|<reviewers>`, then at most ten record lines                                                                                                                                                |
+| `resume` | The payload names the run dir. Read `run.md` there, finish the interrupted stage, and reply with that stage's outcome. Try the reviewer IDs it records; `persona-review` relaunches any that no longer exist. | The outcome of the resumed stage                                                                                                                                                                                                                           |
 
 `k` counts the review rounds on the whole document: the shared-flaw rounds of
 step 7 and every `review` call. The draft round of step 5 is not one. `N` is the
@@ -78,11 +80,15 @@ text yourself in the panel's place.
 
 **The run dir.** At `scope`, create one directory with `mktemp -d` and keep
 everything the run produces there: the drafts, the brief, the matrix, the
-rubric, and `run.md`. Rewrite `run.md` before every reply: the document path;
-the draft count and cap; the scope decisions; the paths of the drafts, brief,
-matrix, and rubric; each persona's reviewer agent ID; a rounds table (number,
-kind — shared-flaw or re-review — and each persona's verdict); and the stage
-reached. A fresh engine resumes from it.
+rubric, and `run.md`. When you invoke `persona-review`, the temp file it
+composes the brief to is `brief.md` in the run dir, and the matrix it reports to
+you is written to `matrix.md` there. Rewrite `run.md` before every reply, and
+inside `write` at each step boundary — after the rubric, after the drafts, after
+the draft round, after synthesis — so an engine lost mid-`write` resumes from
+the last completed step: the document path; the draft count and cap; the scope
+decisions; the paths of the drafts, brief, matrix, and rubric; each persona's
+reviewer agent ID; a rounds table (number, kind — shared-flaw or re-review — and
+each persona's verdict); and the stage reached. A fresh engine resumes from it.
 
 ## Steps
 
@@ -171,10 +177,12 @@ reached. A fresh engine resumes from it.
    the text is new to the reviewers, as after synthesis. A continued reviewer's
    reply reaches you only while you are still working; in a session that returns
    your reply to `write-doc` before the reports arrive, `write-doc` tells you
-   the reply carried no outcome line. That message is the signal: relaunch each
-   reviewer with the Agent tool — the first-round prompt's shape plus its
-   earlier rows and their dispositions, as `persona-review` directs for a
-   reviewer that no longer exists — wait for the reports, and only then reply,
+   the reply carried no outcome line. That message is the signal: run the round
+   again through the `reviewed-writer:persona-review` skill, telling it that the
+   continued reviewers' replies cannot reach this session, so it launches every
+   reviewer afresh as one that no longer exists — the first-round prompt's shape
+   plus its earlier rows and their dispositions — records the new IDs, and
+   consolidates the reports into the matrix as in any round; only then reply,
    with `reviewers: relaunched`; never reply with a guess or with a report of
    waiting. Reply `approve` only when every persona's verdict is ship on the
    text as it stands; otherwise reply `revise`, naming each dissenting persona's

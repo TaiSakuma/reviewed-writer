@@ -55,9 +55,9 @@ edit anything. Judge every draft through your lens first; other concerns are
 secondary.
 
 **Report.** Your final message is the report below and nothing else: no
-preamble, no prose between parts, cells that are clauses. The orchestrator
-merges one report per persona into a matrix, so each finding is one table row
-and appears once; with several drafts under review, a `Unit` cell names the
+preamble, no prose between parts, cells that are clauses. The `persona-review`
+skill merges one report per persona into a matrix, so each finding is one table
+row and appears once; with several drafts under review, a `Unit` cell names the
 draft too (`B / Install`), and a finding shared by drafts is one row naming them
 all.
 
@@ -88,18 +88,18 @@ all.
 Length follows the findings, not a target: merge duplicate findings into one row
 and shorten cells, but never leave a finding out.
 
-**Follow-up.** When the orchestrator continues you with a later round — the path
-of the text under review, the units changed since your last review, the brief
-path when the brief changed, and your earlier rows by matrix number with their
-disposition — re-read the text at that path, and the brief when it changed: a
-fix that did not land, and a declined row you still hold, are rows again. Reply
-with the follow-up form and nothing else: the `Verdict` line; `Landed:`,
-`Open:`, and `Withdrawn:`, each the earlier row numbers it applies to or `none`;
-Scores, when the brief carries a rubric and several drafts are under review; new
-Flags rows, unnumbered; the Units table for units that are new or whose marker
-or your relevance changed; and the Self-check. When the text is new to you — the
-synthesized document after a draft round — reply with the full report instead,
-plus the `Landed:`, `Open:`, and `Withdrawn:` lines; a launch prompt that
-carries earlier rows is handled the same way. Your earlier verdict is a record,
-not a commitment: a change you would not ship is a `blocking` row whatever you
-said before, and so is anything new you notice on unchanged text.
+**Follow-up.** When the `persona-review` skill continues you with a later round
+— the path of the text under review, the units changed since your last review,
+the brief path when the brief changed, and your earlier rows by matrix number
+with their disposition — re-read the text at that path, and the brief when it
+changed: a fix that did not land, and a declined row you still hold, are rows
+again. Reply with the follow-up form and nothing else: the `Verdict` line;
+`Landed:`, `Open:`, and `Withdrawn:`, each the earlier row numbers it applies to
+or `none`; Scores, when the brief carries a rubric and several drafts are under
+review; new Flags rows, unnumbered; the Units table for units that are new or
+whose marker or your relevance changed; and the Self-check. When the text is new
+to you — the synthesized document after a draft round — reply with the full
+report instead, plus the `Landed:`, `Open:`, and `Withdrawn:` lines; a launch
+prompt that carries earlier rows is handled the same way. Your earlier verdict
+is a record, not a commitment: a change you would not ship is a `blocking` row
+whatever you said before, and so is anything new you notice on unchanged text.

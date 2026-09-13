@@ -38,19 +38,22 @@ not proceed on a guess or with invented contents.
    (applied, or declined with the reason). When invoked standalone, default to:
    the shipped document named in the profile's Document section, as it stands;
    all personas listed in the profile's Personas section; implemented status,
-   when the status dimension is enabled; no rubric.
+   when the status dimension is enabled; no rubric. The request may also name a
+   directory for the round's files — an authoring run's run dir — and may state
+   that the reviewers from earlier rounds cannot be continued.
 
-2. **Compose the review brief** to a temp file: the project and document
-   identity, from the profile's Document section; the document's purpose; the
-   declared quadrant(s) and matching reader question(s), carried as the
-   profile's Declaration mechanism section directs; when the status dimension is
-   enabled, each unit's status, and the design decisions for spec content — the
-   brief is self-contained; what is in and out of scope, and whether the section
-   set is an output of the run; the rubric, when the request has one; verified
-   facts; link targets; and the path of the Diátaxis core, so reviewers read the
-   core from the brief. Reviewers never depend on files outside the repository,
-   this skill, and the brief. In a run's later rounds, update the existing brief
-   in place — the draft path(s), the verified facts, what the round changed —
+2. **Compose the review brief** to a temp file — `brief.md` in the directory the
+   request names, when it names one: the project and document identity, from the
+   profile's Document section; the document's purpose; the declared quadrant(s)
+   and matching reader question(s), carried as the profile's Declaration
+   mechanism section directs; when the status dimension is enabled, each unit's
+   status, and the design decisions for spec content — the brief is
+   self-contained; what is in and out of scope, and whether the section set is
+   an output of the run; the rubric, when the request has one; verified facts;
+   link targets; and the path of the Diátaxis core, so reviewers read the core
+   from the brief. Reviewers never depend on files outside the repository, this
+   skill, and the brief. In a run's later rounds, update the existing brief in
+   place — the draft path(s), the verified facts, what the round changed —
    rather than composing a new one; its path stays the same.
 
 3. **Launch or continue the panel.** In a run's first round, launch one
@@ -68,10 +71,12 @@ not proceed on a guess or with invented contents.
    the text is new. Wait for the replies; never poll. Launch afresh only a
    reviewer that no longer exists, with the first-round task prompt's shape —
    the head file path, the brief path, and the path of the text now under review
-   — plus its earlier rows and their dispositions; it does a full review. If the
-   session cannot continue reviewers, say so in the report — the run's rounds
-   then cost full reviews. The report's shape is the agent's own contract; do
-   not restate it.
+   — plus its earlier rows and their dispositions; it does a full review. When
+   the request states that the reviewers cannot be continued, launch every
+   reviewer afresh the same way and keep the new IDs for the run. If the session
+   cannot continue reviewers, say so in the report — the run's rounds then cost
+   full reviews. The report's shape is the agent's own contract; do not restate
+   it.
 
 4. **Collect and consolidate.** If a reviewer errors out, returns no `Verdict:`
    line, or cannot be continued, re-launch it — do not treat a missing verdict
@@ -89,4 +94,5 @@ not proceed on a guess or with invented contents.
    and otherwise append new rows with the next numbers, a relaunched reviewer's
    name leaving the rows it no longer holds; and when the text is new to the
    reviewers, rebuild the relevance grid from their full Units tables and drop
-   the draft scores. Report the matrix to the caller.
+   the draft scores. Report the matrix to the caller, and when the request names
+   a directory, write it to `matrix.md` there as well.

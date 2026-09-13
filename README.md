@@ -30,9 +30,9 @@ Invocations are namespaced: `/reviewed-writer:write-doc` and
 `write-doc` iterates until every persona returns a "ship" verdict, up to the
 run's re-review cap; if the cap is reached with dissent remaining, the run stops
 and reports the unresolved verdicts. The cap, the draft count, and the engine
-default to five rounds, three drafts, and `diataxis-persona-engine`; an
-invocation overrides any of them, and a repository with standing values states
-them in its wrapper skill.
+default to five rounds, three drafts, and
+`reviewed-writer:diataxis-persona-engine`; an invocation overrides any of them,
+and a repository with standing values states them in its wrapper skill.
 
 The Diátaxis review core — the reader questions, the per-quadrant guidance, the
 restructuring rules, and the reviewers' self-check — is
@@ -194,7 +194,7 @@ plugin-root placeholder resolves for the skill and not at your prompt.
 
 Copy `persona-review-profile.md` to `.claude/rules/persona-review-profile.md`,
 the literal path the plugin reads. Keep the wording of its eleven `##` headings
-exactly, since the skills look them up by name, and write a prose body under
+exactly, since the plugin looks them up by name, and write a prose body under
 each: the table under What the consuming repository provides says what each
 supplies. Name the document under `Document`, the persona head files you are
 about to write under `Personas`, and the voice-rules path under `Voice rules`.
@@ -438,20 +438,21 @@ release notes are the signal for it.
 The plugin mechanics in this README were checked against the Claude Code
 documentation and, where noted below, observed on Claude Code 2.1.269; the
 install and update steps assume Claude Code 2.1.195 or newer, where adding a
-marketplace stopped installing its plugins. Claims taken from the documentation
-([discovering plugins][docs-discover], [plugin marketplaces][docs-marketplaces],
-and the [plugins reference][docs-reference]) include: the `@ref` suffix, the
-2.1.195 change, the install summary and its reload, the scopes and their
-settings files, the rule that adding a marketplace under an existing name
-replaces it, the rule that an update is skipped when the resolved version
-matches the installed one, the cache layout composed with the documented
-configuration directory, the `claude plugin list` output, the SSH default, and
-the auto-update default and toggle. Observed on 2.1.269 and not documented:
-editing the checked-in `ref` does not re-point a machine that already registered
-the marketplace, the bare source string overrides the pin, re-registering leaves
-the installed version in place, and `claude plugin update` then moves it. The
-`latest` path follows from the documented behavior of the commands it uses and
-was not run.
+marketplace stopped installing its plugins, and a `write-doc` run assumes
+2.1.219 or newer, where subagents nest by default. Claims taken from the
+documentation ([discovering plugins][docs-discover], [plugin
+marketplaces][docs-marketplaces], and the [plugins reference][docs-reference])
+include: the `@ref` suffix, the 2.1.195 change, the install summary and its
+reload, the scopes and their settings files, the rule that adding a marketplace
+under an existing name replaces it, the rule that an update is skipped when the
+resolved version matches the installed one, the cache layout composed with the
+documented configuration directory, the `claude plugin list` output, the SSH
+default, and the auto-update default and toggle. Observed on 2.1.269 and not
+documented: editing the checked-in `ref` does not re-point a machine that
+already registered the marketplace, the bare source string overrides the pin,
+re-registering leaves the installed version in place, and `claude plugin update`
+then moves it. The `latest` path follows from the documented behavior of the
+commands it uses and was not run.
 
 ## 📖 Why this workflow
 

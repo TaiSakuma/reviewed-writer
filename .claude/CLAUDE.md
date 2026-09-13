@@ -31,11 +31,11 @@ Five components chain at runtime:
    iterates until the engine reports `approve` (up to the re-review cap), and
    relays each outcome line to the user. The draft count, the cap, and the
    engine's name are the skill's own — three, five, and
-   `diataxis-persona-engine`; an invocation overrides any of them, and a
-   consuming repository's wrapper skill in `.claude/skills/` is where a standing
-   override lives. The profile carries none of them — it holds the rules for
-   each round, not how many rounds. The call contract in the skill file is the
-   interface a replacement engine implements.
+   `reviewed-writer:diataxis-persona-engine`; an invocation overrides any of
+   them, and a consuming repository's wrapper skill in `.claude/skills/` is
+   where a standing override lives. The profile carries none of them — it holds
+   the rules for each round, not how many rounds. The call contract in the skill
+   file is the interface a replacement engine implements.
 2. `agents/diataxis-persona-engine.md` — the engine: the persisted subagent
    `write-doc` launches once and continues per call. It reads the profile, runs
    the preflight, and does the authoring work: scope → sources → rubric →
