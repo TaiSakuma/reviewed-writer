@@ -86,7 +86,7 @@ the [releases] page or to the rolling `latest` tag:
       "source": {
         "source": "github",
         "repo": "TaiSakuma/reviewed-writer",
-        "ref": "v0.3.0"
+        "ref": "v0.4.0"
       }
     }
   },
@@ -121,10 +121,10 @@ existed, or at another tag — re-registers it with the `@` suffix matching the
 checked-in `ref`, which overwrites the recorded source:
 
 ```text
-/plugin marketplace add TaiSakuma/reviewed-writer@v0.3.0
+/plugin marketplace add TaiSakuma/reviewed-writer@v0.4.0
 ```
 
-From a shell, `claude plugin marketplace add TaiSakuma/reviewed-writer@v0.3.0`
+From a shell, `claude plugin marketplace add TaiSakuma/reviewed-writer@v0.4.0`
 does the same. The bare `TaiSakuma/reviewed-writer` source string registers the
 default branch instead and overrides the pin. If the plugin is already installed
 from this marketplace, re-registering leaves the installed copy as it is; update
@@ -415,9 +415,9 @@ maintain is under Why this workflow.
 
 ## 📋 Versioning
 
-Releases are tagged `v<version>` (for example `v0.3.0`), and
-`.claude-plugin/plugin.json` carries the matching version (`0.3.0`); the
-`u<version>` tags on the repository (for example `u0.3.0`) are CI triggers, not
+Releases are tagged `v<version>` (for example `v0.4.0`), and
+`.claude-plugin/plugin.json` carries the matching version (`0.4.0`); the
+`u<version>` tags on the repository (for example `u0.4.0`) are CI triggers, not
 pin targets. The rolling `latest` tag points at the highest released version.
 The release runbook and the PR-title convention are in
 [CONTRIBUTING.md][contributing], under Releasing and PR Title Convention; the
