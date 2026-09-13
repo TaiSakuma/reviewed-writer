@@ -1,17 +1,17 @@
 <!--
 Copy this file to `.claude/rules/persona-review-profile.md` in the consuming
-repository and fill in every section. The `reviewed-writer` engine agent and
-`persona-review` skill read the eleven `##` headings below by name: keep their
-exact wording. Each body is prose an agent reads, not parsed fields, so state
-the value in whatever form is clearest. Delete these comments once the section
-is written.
+repository and fill in every section. The `reviewed-writer` writer and panel
+agents and `persona-review` skill read the eleven `##` headings below by name:
+keep their exact wording. Each body is prose an agent reads, not parsed fields,
+so state the value in whatever form is clearest. Delete these comments once the
+section is written.
 -->
 
 # Persona-review profile
 
-Repository-specific values for the `reviewed-writer` plugin's
-`diataxis-persona-engine` agent and `persona-review` skill. Both read this file
-first and refer to its sections by name.
+Repository-specific values for the `reviewed-writer` plugin's `diataxis-writer`
+and `diataxis-persona-panel` agents and `persona-review` skill. All three read
+this file first and refer to its sections by name.
 
 ## Document
 

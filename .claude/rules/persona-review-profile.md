@@ -1,10 +1,10 @@
 # Persona-review profile
 
-Repository-specific values for the `reviewed-writer` plugin's
-`diataxis-persona-engine` agent and `persona-review` skill, invoked through
+Repository-specific values for the `reviewed-writer` plugin's `diataxis-writer`
+and `diataxis-persona-panel` agents and `persona-review` skill, invoked through
 `.claude/skills/write-docs/SKILL.md` and, for report-only rounds,
-`.claude/skills/review-docs/SKILL.md`. Both read this file first and refer to
-their sections by name; the section structure is shared with the counterpart
+`.claude/skills/review-docs/SKILL.md`. All three read this file first and refer
+to its sections by name; the section structure is shared with the counterpart
 profiles in legendary-octo-happiness and hypothesis-awkward. This repository
 consumes its own plugin.
 
@@ -14,7 +14,7 @@ The documents are `README.md` and `CONTRIBUTING.md` of `reviewed-writer`, a
 Claude Code plugin for authoring documents through a panel of fixed-persona
 reviewers; one document per run is the unit of work, and the section set is an
 output of the run. Scoping note: the README is the plugin's public face — its
-statement of the profile contract must stay in sync with the engine, the skills,
+statement of the profile contract must stay in sync with the agents, the skills,
 and `.claude/CLAUDE.md`.
 
 ## Personas
@@ -24,7 +24,8 @@ The six review personas are the persona head files in `.claude/personas/`:
 `evaluator.md`, and `maintainer.md`. Default primary personas per document — for
 `README.md`: `plugin-user.md` and `evaluator.md`; for `CONTRIBUTING.md`: `ai.md`
 and `plugin-user.md`, plus `maintainer.md` when the run touches the Releasing
-sections — confirmed or overridden when the run is scoped (step 1).
+sections — overridden by the run's scoping notes when the user says so; the
+panel fixes them at its first round from this section and those notes.
 
 ## Declaration mechanism
 
@@ -47,14 +48,14 @@ CONTRIBUTING) — creating or removing sections as the content requires.
 Trigger: revising units that state the plugin's contract — the profile section
 list, the component inventory, the invocation names. Premise: the contract as
 the plugin's skill and agent files define it. Authority:
-`skills/write-doc/SKILL.md`, `agents/diataxis-persona-engine.md`,
-`skills/persona-review/SKILL.md`, and `agents/persona-reviewer.md` in the
-working tree.
+`skills/write-doc/SKILL.md`, `agents/diataxis-writer.md`,
+`agents/diataxis-persona-panel.md`, `skills/persona-review/SKILL.md`, and
+`agents/persona-reviewer.md` in the working tree.
 
 ## Sources
 
-`skills/write-doc/SKILL.md`; `agents/diataxis-persona-engine.md`;
-`skills/persona-review/SKILL.md`;
+`skills/write-doc/SKILL.md`; `agents/diataxis-writer.md`;
+`agents/diataxis-persona-panel.md`; `skills/persona-review/SKILL.md`;
 `skills/persona-review/references/diataxis-review.md`;
 `agents/persona-reviewer.md`; `.claude-plugin/plugin.json` and
 `.claude-plugin/marketplace.json`; `.github/workflows/*`; `.claude/CLAUDE.md`;

@@ -29,16 +29,21 @@ not proceed on a guess or with invented contents.
 ## Steps
 
 1. **Determine the review request.** When invoked from an authoring run, the run
-   state in the conversation supplies the draft path(s), the document's purpose,
-   what is in and out of scope, the declared quadrant(s), each unit's status
-   (when the profile's Status dimension section is enabled), the rubric, the
-   verified facts and link targets, the personas chosen for the run, and — in a
-   run's later rounds — each persona's reviewer from the earlier rounds, the
-   units changed since, and the earlier flag rows with their disposition
-   (applied, or declined with the reason). When invoked standalone, default to:
-   the shipped document named in the profile's Document section, as it stands;
-   all personas listed in the profile's Personas section; implemented status,
-   when the status dimension is enabled; no rubric. The request may also name a
+   state supplies the draft path(s), the document's purpose, what is in and out
+   of scope, the declared quadrant(s), each unit's status (when the profile's
+   Status dimension section is enabled), the rubric, the verified facts and link
+   targets, the personas chosen for the run and which of them are primary, and —
+   in a run's later rounds — each persona's reviewer from the earlier rounds,
+   the units changed since, whether the text is new to them, and the earlier
+   flag rows with their disposition (applied, or declined with the reason, among
+   others). The run state is in the conversation, or in the run dir files the
+   request names: `scope.md` for the purpose, scope, section set, status and
+   design decisions, rubric, verified facts, and link targets; `changes.md` for
+   the units changed, the `text: new|revised` line, and the dispositions;
+   `matrix.md` for the earlier rows. When invoked standalone, default to: the
+   shipped document named in the profile's Document section, as it stands; all
+   personas listed in the profile's Personas section; implemented status, when
+   the status dimension is enabled; no rubric. The request may also name a
    directory for the round's files — an authoring run's run dir — and may state
    that the reviewers from earlier rounds cannot be continued.
 
@@ -54,7 +59,8 @@ not proceed on a guess or with invented contents.
    from the brief. Reviewers never depend on files outside the repository, this
    skill, and the brief. In a run's later rounds, update the existing brief in
    place — the draft path(s), the verified facts, what the round changed —
-   rather than composing a new one; its path stays the same.
+   rather than composing a new one, reading `scope.md` and `changes.md` afresh
+   when the request names them; its path stays the same.
 
 3. **Launch or continue the panel.** In a run's first round, launch one
    `reviewed-writer:persona-reviewer` subagent per persona in the request via
@@ -66,33 +72,36 @@ not proceed on a guess or with invented contents.
    message so they run in parallel: the path of the text now under review, the
    units changed since its last review, the brief path when the brief changed
    since then, and its earlier flag rows by matrix number with their
-   disposition; say when the text is new to it, as after synthesis; it re-reads
-   the text at that path and returns the follow-up form, or the full report when
-   the text is new. Wait for the replies; never poll. Launch afresh only a
-   reviewer that no longer exists, with the first-round task prompt's shape —
-   the head file path, the brief path, and the path of the text now under review
-   — plus its earlier rows and their dispositions; it does a full review. When
-   the request states that the reviewers cannot be continued, launch every
-   reviewer afresh the same way and keep the new IDs for the run. If the session
-   cannot continue reviewers, say so in the report — the run's rounds then cost
-   full reviews. The report's shape is the agent's own contract; do not restate
-   it.
+   disposition; say when the text is new to it, as after synthesis —
+   `changes.md`'s `text:` line says so when the request names that file; it
+   re-reads the text at that path and returns the follow-up form, or the full
+   report when the text is new. Wait for the replies; never poll. Launch afresh
+   only a reviewer that no longer exists, with the first-round task prompt's
+   shape — the head file path, the brief path, and the path of the text now
+   under review — plus its earlier rows and their dispositions; it does a full
+   review. When the request states that the reviewers cannot be continued,
+   launch every reviewer afresh the same way and keep the new IDs for the run.
+   If the session cannot continue reviewers, say so in the report — the run's
+   rounds then cost full reviews. The report's shape is the agent's own
+   contract; do not restate it.
 
 4. **Collect and consolidate.** If a reviewer errors out, returns no `Verdict:`
    line, or cannot be continued, re-launch it — do not treat a missing verdict
    as a pass. Build the matrix from the reports' tables, shorter than any one
-   report: each persona's verdict line; with a rubric, scores by axis and draft
-   and the best draft by count of personas; a relevance grid, units as rows and
-   personas as columns, with the marker read for each unit and any disagreement;
-   then the flag rows, numbered across the run, `blocking` first, grouped by
-   unit, one row per finding naming the personas raising it and keeping its
-   kind, destination, and fix. In a later round, update the previous matrix
-   rather than rebuilding it: replace each persona's verdict line and, with a
-   rubric over drafts, its scores; mark earlier rows landed, withdrawn, or still
-   open as the follow-ups report — a shared row stays open while any persona
-   that raised it holds it open; merge a re-raised finding into its existing row
-   and otherwise append new rows with the next numbers, a relaunched reviewer's
-   name leaving the rows it no longer holds; and when the text is new to the
-   reviewers, rebuild the relevance grid from their full Units tables and drop
-   the draft scores. Report the matrix to the caller, and when the request names
-   a directory, write it to `matrix.md` there as well.
+   report: each persona's verdict line, marked `(primary)` for a primary
+   persona; with a rubric, scores by axis and draft and the best draft by count
+   of personas; a relevance grid, units as rows and personas as columns — a
+   primary persona's column marked `(primary)` — with the marker read for each
+   unit and any disagreement; then the flag rows, numbered across the run,
+   `blocking` first, grouped by unit, one row per finding naming the personas
+   raising it and keeping its kind, destination, and fix. In a later round,
+   update the previous matrix — read from `matrix.md` when the request names a
+   directory — rather than rebuilding it: replace each persona's verdict line
+   and, with a rubric over drafts, its scores; mark earlier rows landed,
+   withdrawn, or still open as the follow-ups report — a shared row stays open
+   while any persona that raised it holds it open; merge a re-raised finding
+   into its existing row and otherwise append new rows with the next numbers, a
+   relaunched reviewer's name leaving the rows it no longer holds; and when the
+   text is new to the reviewers, rebuild the relevance grid from their full
+   Units tables and drop the draft scores. Report the matrix to the caller, and
+   when the request names a directory, write it to `matrix.md` there as well.
