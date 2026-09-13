@@ -87,13 +87,14 @@ in the repository).
 
 5. **Parallel persona review** — Invoke the `reviewed-writer:persona-review`
    skill over the drafts: it composes the shared review brief from the run state
-   and the profile, launches one reviewer per persona in parallel, collects the
-   reviews, and consolidates them into a matrix. Read this round's reviews for
-   lens-relevance and accuracy; treat comments on framing or altitude as input
-   to the synthesis (step 7), not as fixes to apply per draft — the drafts
-   differ in framing by design, so a framing critique of one draft mainly
-   informs which framing to keep, and the re-review (step 8) judges the framing
-   of the document that will ship.
+   and the profile, launches one reviewer per persona in parallel — the
+   reviewers the run's later rounds continue — collects the reviews, and
+   consolidates them into a matrix. Read this round's reviews for lens-relevance
+   and accuracy; treat comments on framing or altitude as input to the synthesis
+   (step 7), not as fixes to apply per draft — the drafts differ in framing by
+   design, so a framing critique of one draft mainly informs which framing to
+   keep, and the re-review (step 8) judges the framing of the document that will
+   ship.
 
 6. **Fact-check** — Verify every claim and code example against the targets in
    the profile's Fact-check targets section, applying its checking notes. When
@@ -111,21 +112,30 @@ in the repository).
    flaw. Then produce the document: when strengths are split across drafts,
    merge the per-axis winners; when one draft is strongest on most axes, take it
    as the base and graft only the specific wins from the others. Merging adds
-   seams, so do not merge for its own sake. Apply cross-cutting fixes and write
-   the final text yourself, following the voice rules — persona-suggested
-   wording is advisory. An ask a persona flagged out of scope, and any content
-   flagged as out of quadrant, is routed to the destination named in the
-   profile's Declaration mechanism section — not folded in where it does not
-   belong.
+   seams, so do not merge for its own sake. Produce it at the document's own
+   path from the draft files — copy the base draft there, or assemble the
+   winning sections from their files — and edit it in place; do not retype text
+   a draft already holds. Apply cross-cutting fixes and write the final text
+   yourself, following the voice rules — persona-suggested wording is advisory.
+   An ask a persona flagged out of scope, and any content flagged as out of
+   quadrant, is routed to the destination named in the profile's Declaration
+   mechanism section — not folded in where it does not belong.
 
 8. **Re-review the resulting document** — The draft review (step 5) does not
    cover the text you will ship: a merge can inherit a weakness shared by every
    draft, and a chosen-and-edited draft carries changes no reviewer saw. Invoke
    the `reviewed-writer:persona-review` skill again on the resulting document
    (same request; the declarations travel with the text as the Declaration
-   mechanism directs, however much a round has changed), apply the genuine fixes
-   within the declared quadrant(s), and re-review — iterating until every
-   persona returns a "ship" verdict, up to the run's re-review cap (step 1;
+   mechanism directs, however much a round has changed): it continues the draft
+   round's reviewers rather than launching new ones — a full report from each on
+   the synthesized text, the follow-up form in later rounds — so a round costs a
+   re-read and a reply per persona. Apply the genuine fixes within the declared
+   quadrant(s) as targeted edits, never by rewriting the document, recording for
+   each flag row whether it was applied or declined with the reason, a
+   structural row against a fixed section set being declined for scoping and
+   carried to the record (step 10) — the next round's follow-ups carry that —
+   and re-review, iterating until a round returns a "ship" verdict from every
+   persona on the text as it stands, up to the run's re-review cap (step 1;
    rounds spent in step 7 count against it). Each round, re-run the checks in
    the profile's Verification section, and re-run the fact-check (step 6) over
    the claims the round's fixes changed or added, since a fix can introduce a
@@ -149,9 +159,9 @@ in the repository).
   need and the others can tell early that it is not for them while still seeing
   it is useful to its own readers.
 - Content is not obligated to serve every persona, and the document does not owe
-  any persona content. The correct review from a low-relevance persona is a low
-  relevance score and a ship verdict — not asks that bend the document toward
-  its lens. When personas' fixes conflict, the primary personas from step 1 win.
+  any persona content. The correct review from a low-relevance persona is `low`
+  relevance and a ship verdict — not asks that bend the document toward its
+  lens. When personas' fixes conflict, the primary personas from step 1 win.
 - When the section set is an output of the run: relocating out-of-quadrant
   content, creating the section a quadrant needs, and removing a section that no
   longer serves anyone are actions the run takes, guided by persona feedback.
@@ -179,4 +189,11 @@ in the repository).
   content is relocated or routed, never polished in place.
 - Voice and formatting follow the voice rules; the orchestrator writes the final
   text, not the personas.
+- The orchestrator's context is the run's scarcest resource. Keep command output
+  out of it: send a check's output to a file and print its exit status and
+  failing lines; compare versions with `--stat` or a diff of the changed
+  section; read the document under review once per round and work from the
+  matrix's citations. When a search settles a question, count the matches first
+  and never truncate the output — a cut-off search turns present evidence into
+  apparent absence.
 - Apply the additional guidelines in the profile's Extra guidelines section.

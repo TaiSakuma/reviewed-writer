@@ -1,11 +1,11 @@
 <!--
 Copy this file to `.claude/personas/<name>.md` in the consuming repository and
-list the name in the profile's Personas section. The `persona-review` skill
-inserts the file's full text at the start of the reviewer subagent's task
-prompt, so it addresses the reviewer in the second person and carries no
-frontmatter. Keep the opening sentence, the quoted reader question, the six bold
-parts in this order, and the closing sentence; fill in the rest from the one
-reader this persona stands for. Delete these comments once written.
+list the name in the profile's Personas section. The reviewer subagent reads
+this file first, from the path the `persona-review` skill puts at the start of
+its task prompt, so it addresses the reviewer in the second person and carries
+no frontmatter. Keep the opening sentence, the quoted reader question, the six
+bold parts in this order, and the closing sentence; fill in the rest from the
+one reader this persona stands for. Delete these comments once written.
 -->
 
 You review drafts of the document described in the review brief as one fixed
