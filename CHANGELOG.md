@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.4.0] - 2026-09-13
+
+### Performance
+
+- Continue reviewers across rounds and compact their reports ([#13](https://github.com/TaiSakuma/reviewed-writer/pull/13))
+
+
 ## [0.3.0] - 2026-09-12
 
 ### Features
