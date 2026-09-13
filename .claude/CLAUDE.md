@@ -23,28 +23,40 @@ under `.github/`, and two JSON manifests.
 
 ## Architecture
 
-Four components chain at runtime:
+Five components chain at runtime:
 
-1. `skills/write-doc/SKILL.md` — the authoring orchestrator: scope → sources →
-   rubric → structurally distinct drafts → persona panel → fact-check →
-   synthesize → re-review until every persona ships (up to the re-review cap) →
-   verify → record. The draft count and the cap are the skill's own, three and
-   five; an invocation overrides either, and a consuming repository's wrapper
-   skill in `.claude/skills/` is where a standing override lives. The profile
-   carries neither — it holds the rules for each round, not how many rounds.
-2. `skills/persona-review/SKILL.md` — one review round, invoked by `write-doc`
-   at its review steps or standalone. It composes a self-contained review brief
-   to a temp file, launches one `persona-reviewer` subagent per persona in
-   parallel in a run's first round and continues them with what changed in later
-   rounds, and consolidates their reviews into a matrix.
-3. `agents/persona-reviewer.md` — a read-only subagent that reads and adopts the
+1. `skills/write-doc/SKILL.md` — the run's orchestrator, unaware of the
+   document, the profile, Diátaxis, and the panel: it launches the engine agent,
+   drives it through `scope`, `write`, `review`, `revise`, and `finish` calls,
+   iterates until the engine reports `approve` (up to the re-review cap), and
+   relays each outcome line to the user. The draft count, the cap, and the
+   engine's name are the skill's own — three, five, and
+   `reviewed-writer:diataxis-persona-engine`; an invocation overrides any of
+   them, and a consuming repository's wrapper skill in `.claude/skills/` is
+   where a standing override lives. The profile carries none of them — it holds
+   the rules for each round, not how many rounds. The call contract in the skill
+   file is the interface a replacement engine implements.
+2. `agents/diataxis-persona-engine.md` — the engine: the persisted subagent
+   `write-doc` launches once and continues per call. It reads the profile, runs
+   the preflight, and does the authoring work: scope → sources → rubric →
+   structurally distinct drafts → persona panel → fact-check → synthesize →
+   re-review rounds → verify → record. It cannot ask the user; scoping questions
+   return to `write-doc` as the open questions of `scoped`. It keeps the run's
+   state in a run dir (`run.md`) so a fresh engine can resume.
+3. `skills/persona-review/SKILL.md` — one review round, invoked by the engine at
+   its review steps or standalone. It composes a self-contained review brief to
+   a temp file, launches one `persona-reviewer` subagent per persona in parallel
+   in a run's first round and continues them with what changed in later rounds,
+   and consolidates their reviews into a matrix.
+4. `agents/persona-reviewer.md` — a read-only subagent that reads and adopts the
    persona head file its task prompt names first, reviews each unit against its
    declared quadrant, and returns a tabular report headed by a ship/revise
    verdict.
-4. `templates/` — one skeleton per consumer-side file: the profile, the
-   declaration file, a persona head file, and the voice rules. Both skills run a
-   preflight before anything else: a missing file, or a missing or renamed
-   profile section, stops the run and names the template to copy.
+5. `templates/` — one skeleton per consumer-side file: the profile, the
+   declaration file, a persona head file, and the voice rules. The engine and
+   `persona-review` run a preflight before anything else: a missing file, or a
+   missing or renamed profile section, stops the run and names the template to
+   copy.
 
 The shared review core — reader questions, per-quadrant guidance, restructuring
 rules (create/remove/split/merge/relocate/reclassify), and the reviewers'
@@ -55,7 +67,8 @@ three-pass self-check — is
 ## The profile is the interface
 
 The plugin is repository-agnostic. All repository-specific values live in files
-the consuming repository checks in, and the skills read them by name:
+the consuming repository checks in, and the engine and `persona-review` read
+them by name:
 
 - `.claude/rules/persona-review-profile.md` — its `##` section headings are the
   contract: Document, Personas, Declaration mechanism, Premise to pin, Sources,
@@ -66,9 +79,10 @@ the consuming repository checks in, and the skills read them by name:
   shapes, and the declaration record.
 - Persona head files in `.claude/personas/`, listed in the profile.
 
-When editing the skills, keep this contract in sync across all three components,
-the README, and the profile template `templates/persona-review-profile.md`,
-which document the same section list.
+When editing the engine or the skills, keep this contract in sync across the
+engine, `persona-review`, the reviewer agent, the README, and the profile
+template `templates/persona-review-profile.md`, which document the same section
+list.
 
 ## Design invariants
 
@@ -82,8 +96,11 @@ them:
   a scoping decision, not a review outcome.
 - One quadrant per unit; out-of-quadrant content is relocated or routed, never
   polished in place.
-- Accuracy beats style; the orchestrator writes the final text, personas'
-  wording is advisory.
+- Accuracy beats style; the engine writes the final text, personas' wording is
+  advisory.
+- `write-doc` acts on the engine's outcome line alone; the domain vocabulary —
+  quadrants, personas, flag kinds — stays in the engine and the review
+  components, so a consumer can name a replacement engine at invocation.
 
 ## Versioning
 

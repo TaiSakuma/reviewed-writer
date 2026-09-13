@@ -1,11 +1,12 @@
 # Persona-review profile
 
-Repository-specific values for the `reviewed-writer` plugin's `write-doc`
-engine, invoked through `.claude/skills/write-docs/SKILL.md` and, for
-report-only rounds, `.claude/skills/review-docs/SKILL.md`. The engine reads this
-file first and refers to its sections by name; the section structure is shared
-with the counterpart profiles in legendary-octo-happiness and
-hypothesis-awkward. This repository consumes its own plugin.
+Repository-specific values for the `reviewed-writer` plugin's
+`diataxis-persona-engine` agent and `persona-review` skill, invoked through
+`.claude/skills/write-docs/SKILL.md` and, for report-only rounds,
+`.claude/skills/review-docs/SKILL.md`. Both read this file first and refer to
+their sections by name; the section structure is shared with the counterpart
+profiles in legendary-octo-happiness and hypothesis-awkward. This repository
+consumes its own plugin.
 
 ## Document
 
@@ -13,8 +14,8 @@ The documents are `README.md` and `CONTRIBUTING.md` of `reviewed-writer`, a
 Claude Code plugin for authoring documents through a panel of fixed-persona
 reviewers; one document per run is the unit of work, and the section set is an
 output of the run. Scoping note: the README is the plugin's public face — its
-statement of the profile contract must stay in sync with the skills and
-`.claude/CLAUDE.md`.
+statement of the profile contract must stay in sync with the engine, the skills,
+and `.claude/CLAUDE.md`.
 
 ## Personas
 
@@ -45,13 +46,15 @@ CONTRIBUTING) — creating or removing sections as the content requires.
 
 Trigger: revising units that state the plugin's contract — the profile section
 list, the component inventory, the invocation names. Premise: the contract as
-the plugin's skill files define it. Authority: `skills/write-doc/SKILL.md`,
+the plugin's skill and agent files define it. Authority:
+`skills/write-doc/SKILL.md`, `agents/diataxis-persona-engine.md`,
 `skills/persona-review/SKILL.md`, and `agents/persona-reviewer.md` in the
 working tree.
 
 ## Sources
 
-`skills/write-doc/SKILL.md`; `skills/persona-review/SKILL.md`;
+`skills/write-doc/SKILL.md`; `agents/diataxis-persona-engine.md`;
+`skills/persona-review/SKILL.md`;
 `skills/persona-review/references/diataxis-review.md`;
 `agents/persona-reviewer.md`; `.claude-plugin/plugin.json` and
 `.claude-plugin/marketplace.json`; `.github/workflows/*`; `.claude/CLAUDE.md`;

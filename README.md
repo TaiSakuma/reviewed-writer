@@ -14,12 +14,13 @@ convention in [CONTRIBUTING.md][contributing].
 
 ## 📋 What the plugin ships
 
-| Component          | Kind  | Purpose                                                                                                                                                                                                                                                                                                                                   |
-| ------------------ | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `write-doc`        | skill | Authors or substantially revises the document the profile names: scoping with you, rubric, structurally distinct drafts, persona panel, fact-check, synthesis, re-review.                                                                                                                                                                 |
-| `persona-review`   | skill | Runs one review round — invoked by `write-doc` at its review steps, or standalone for a report-only round.                                                                                                                                                                                                                                |
-| `persona-reviewer` | agent | Reviews as one fixed persona whose head file its task prompt names first; launched by `persona-review` in a run's first round, one read-only reviewer per persona, in parallel, and continued with what changed in each later round; the plugin pins no model, so a reviewer runs on the model the launching session gives its subagents. |
-| `templates/`       | files | Four skeletons: the profile, the declaration file, a persona head file, the voice rules.                                                                                                                                                                                                                                                  |
+| Component                 | Kind  | Purpose                                                                                                                                                                                                                                                                                                                                                |
+| ------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `write-doc`               | skill | Drives the engine agent through scope, write, review, revise, and finish calls until its reviewers approve, up to the run's re-review cap; owns the run's numbers and relays each outcome to you; knows nothing of the document, the profile, or the panel.                                                                                            |
+| `diataxis-persona-engine` | agent | The engine `write-doc` launches and continues: reads the profile, runs the preflight, scopes the run (its open questions reach you through `write-doc`), writes structurally distinct drafts, runs the persona panel through `persona-review`, fact-checks, synthesizes, and records; needs subagent nesting, on by default since Claude Code 2.1.219. |
+| `persona-review`          | skill | Runs one review round — invoked by the engine at its review steps, or standalone for a report-only round.                                                                                                                                                                                                                                              |
+| `persona-reviewer`        | agent | Reviews as one fixed persona whose head file its task prompt names first; launched by `persona-review` in a run's first round, one read-only reviewer per persona, in parallel, and continued with what changed in each later round; the plugin pins no model, so a reviewer runs on the model the launching session gives its subagents.              |
+| `templates/`              | files | Four skeletons: the profile, the declaration file, a persona head file, the voice rules.                                                                                                                                                                                                                                                               |
 
 Invocations are namespaced: `/reviewed-writer:write-doc` and
 `/reviewed-writer:persona-review`. A repository's own wrapper skills in
@@ -28,9 +29,10 @@ Invocations are namespaced: `/reviewed-writer:write-doc` and
 
 `write-doc` iterates until every persona returns a "ship" verdict, up to the
 run's re-review cap; if the cap is reached with dissent remaining, the run stops
-and reports the unresolved verdicts. The cap and the draft count default to five
-rounds and three drafts; an invocation overrides either, and a repository with
-standing values states them in its wrapper skill.
+and reports the unresolved verdicts. The cap, the draft count, and the engine
+default to five rounds, three drafts, and
+`reviewed-writer:diataxis-persona-engine`; an invocation overrides any of them,
+and a repository with standing values states them in its wrapper skill.
 
 The Diátaxis review core — the reader questions, the per-quadrant guidance, the
 restructuring rules, and the reviewers' self-check — is
@@ -191,8 +193,8 @@ plugin-root placeholder resolves for the skill and not at your prompt.
 ### The profile
 
 Copy `persona-review-profile.md` to `.claude/rules/persona-review-profile.md`,
-the literal path the skills read. Keep the wording of its eleven `##` headings
-exactly, since the skills look them up by name, and write a prose body under
+the literal path the plugin reads. Keep the wording of its eleven `##` headings
+exactly, since the plugin looks them up by name, and write a prose body under
 each: the table under What the consuming repository provides says what each
 supplies. Name the document under `Document`, the persona head files you are
 about to write under `Personas`, and the voice-rules path under `Voice rules`.
@@ -242,7 +244,7 @@ the editorial rules, and the formatting conventions the prose follows. The
 template opens with optional `paths:` frontmatter, a Claude Code rule scope that
 loads a file under `.claude/rules/` into sessions touching the listed documents:
 keep it at the top with your document's path when the file sits there, or delete
-the block. The skills read the file by the path the profile names either way.
+the block. The plugin reads the file by the path the profile names either way.
 
 ### The wrapper skill, optional
 
@@ -324,10 +326,10 @@ includes this one.
 
 ## 📋 What the consuming repository provides
 
-The skills and the reviewer agent read the first four files by name from the
-consuming repository, never from the plugin's own directory: the first two at
-the literal paths below, the others wherever the profile names them. The last
-two configure Claude Code itself.
+The engine, the `persona-review` skill, and the reviewer agent read the first
+four files by name from the consuming repository, never from the plugin's own
+directory: the first two at the literal paths below, the others wherever the
+profile names them. The last two configure Claude Code itself.
 
 | File                                                            | Template it starts from     | What it must contain                                                                                      |
 | --------------------------------------------------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -381,7 +383,7 @@ the kind of flags the reviewer reports. One persona head file is enough to run
 the workflow; the panel is whatever the `Personas` section lists.
 
 **The voice-rules file.** The editorial rules for the documents' prose, at the
-path the profile's `Voice rules` section names; `write-doc` applies them when it
+path the profile's `Voice rules` section names; the engine applies them when it
 writes the final text, and persona-suggested wording is advisory against them.
 Its template carries optional `paths:` frontmatter, a Claude Code rule scope.
 
@@ -392,17 +394,17 @@ plugin for the repository.
 **The wrapper skill**, optional, is a `SKILL.md` under `.claude/skills/<skill>/`
 with `name` and `description` frontmatter — plus `argument-hint` when it takes
 an argument — whose body invokes the namespaced skill it wraps; a repository's
-standing draft count and re-review cap belong there.
+standing draft count, re-review cap, and engine belong there.
 
-**The preflight.** Both skills check these files before anything else: the
-profile, carrying every `##` section the profile template lists; the declaration
-file; every persona head file the `Personas` section lists; and the voice-rules
-file the `Voice rules` section names. A missing file, or a profile section
-absent or renamed, stops the run: it reports the missing path or heading, names
-the template in the plugin's `templates/` directory to copy and fill in, and
-does not proceed on a guess. The check confirms existence and headings; it reads
-no body beyond the Personas and Voice rules sections, which name the files it
-looks for.
+**The preflight.** The engine and `persona-review` check these files before
+anything else: the profile, carrying every `##` section the profile template
+lists; the declaration file; every persona head file the `Personas` section
+lists; and the voice-rules file the `Voice rules` section names. A missing file,
+or a profile section absent or renamed, stops the run: it reports the missing
+path or heading, names the template in the plugin's `templates/` directory to
+copy and fill in, and does not proceed on a guess. The check confirms existence
+and headings; it reads no body beyond the Personas and Voice rules sections,
+which name the files it looks for.
 
 **Worked examples.** This repository's own [`.claude/`
 directory][own-claude-dir] is a filled-in set in the source tree — the profile,
@@ -436,20 +438,21 @@ release notes are the signal for it.
 The plugin mechanics in this README were checked against the Claude Code
 documentation and, where noted below, observed on Claude Code 2.1.269; the
 install and update steps assume Claude Code 2.1.195 or newer, where adding a
-marketplace stopped installing its plugins. Claims taken from the documentation
-([discovering plugins][docs-discover], [plugin marketplaces][docs-marketplaces],
-and the [plugins reference][docs-reference]) include: the `@ref` suffix, the
-2.1.195 change, the install summary and its reload, the scopes and their
-settings files, the rule that adding a marketplace under an existing name
-replaces it, the rule that an update is skipped when the resolved version
-matches the installed one, the cache layout composed with the documented
-configuration directory, the `claude plugin list` output, the SSH default, and
-the auto-update default and toggle. Observed on 2.1.269 and not documented:
-editing the checked-in `ref` does not re-point a machine that already registered
-the marketplace, the bare source string overrides the pin, re-registering leaves
-the installed version in place, and `claude plugin update` then moves it. The
-`latest` path follows from the documented behavior of the commands it uses and
-was not run.
+marketplace stopped installing its plugins, and a `write-doc` run assumes
+2.1.219 or newer, where subagents nest by default. Claims taken from the
+documentation ([discovering plugins][docs-discover], [plugin
+marketplaces][docs-marketplaces], and the [plugins reference][docs-reference])
+include: the `@ref` suffix, the 2.1.195 change, the install summary and its
+reload, the scopes and their settings files, the rule that adding a marketplace
+under an existing name replaces it, the rule that an update is skipped when the
+resolved version matches the installed one, the cache layout composed with the
+documented configuration directory, the `claude plugin list` output, the SSH
+default, and the auto-update default and toggle. Observed on 2.1.269 and not
+documented: editing the checked-in `ref` does not re-point a machine that
+already registered the marketplace, the bare source string overrides the pin,
+re-registering leaves the installed version in place, and `claude plugin update`
+then moves it. The `latest` path follows from the documented behavior of the
+commands it uses and was not run.
 
 ## 📖 Why this workflow
 
@@ -473,9 +476,8 @@ whether the reader's question was answered, and a classification maintained by
 hand is an intention that erodes, as it had in [legendary-octo-happiness], one
 of the two repositories it came from, where here it is a marker the panel
 re-reads every round. Structurally distinct drafts precede the panel because
-structure is the decision hardest to reverse once a text exists; the
-orchestrator writes the final text, personas' wording is advisory, and accuracy
-beats style.
+structure is the decision hardest to reverse once a text exists; the engine
+writes the final text, personas' wording is advisory, and accuracy beats style.
 
 The exchange is real. A consuming repository authors and maintains the profile,
 the declaration rules, the persona head files, and the voice rules; the
@@ -489,7 +491,7 @@ draft in the draft round; each later round continues the same reviewers with
 what changed: a full report on the synthesized document, then a re-read and a
 short reply per persona, rather than a fresh review each time, though a
 continued reviewer's context grows with each round. The panel runs in parallel,
-and the orchestrator writes each draft in full before the panel sees it. A full
+and the engine writes each draft in full before the panel sees it. A full
 `write-doc` run adds a panel pass over the drafts to the re-review rounds, up to
 the cap. At the default draft count and cap — three and five — with six
 personas, that is at most six panel rounds — six full reviews of the drafts, six

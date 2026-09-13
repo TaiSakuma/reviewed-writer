@@ -45,6 +45,6 @@ to the documents' prose, not to code, manifests, or commit messages.
 
 ## During persona review
 
-Persona-suggested wording is advisory; the orchestrator writes the final text
-itself. A persona ask that conflicts with this file is resolved in favor of this
-file unless the user rules otherwise.
+Persona-suggested wording is advisory; the engine writes the final text itself.
+A persona ask that conflicts with this file is resolved in favor of this file
+unless the user rules otherwise.
