@@ -130,11 +130,14 @@ claude --plugin-dir . plugin details reviewed-writer   # from the repository roo
 
 The `Source:` line names the copy: `reviewed-writer@inline` for the directory
 you passed, `reviewed-writer@reviewed-writer` for the installed one. The
-installed one means the path you passed was not a plugin directory; start the
-session again from the repository root, or pass the path to it.
-`Plugin "reviewed-writer" not found.` is the third outcome — nothing is
-installed to fall back to, and `/write-docs` fails with the unknown-skill error
-above.
+installed one indicates that the flag was left off or that its path is not a
+plugin directory: start the session again from the repository root, or pass the
+path to it. `Plugin "reviewed-writer" not found.` is the third outcome: the flag
+did not resolve, as above, and no installed copy is enabled for the current
+directory. Outside the repository the project-scoped install is disabled, so the
+same fix applies; from the repository root the line indicates no enabled install
+to fall back to, and a session started without the flag fails with the
+unknown-skill error above.
 
 `--plugin-dir` is read when the session starts and holds for that session alone:
 a running session cannot be switched over, and the next session started without
