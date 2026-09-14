@@ -74,15 +74,15 @@ The pin is checked in; `.claude/settings.json` names the tag (`v0.5.0` as this
 is written). With the folder trusted, run `/plugin` in a session here and find
 `reviewed-writer@reviewed-writer` in the Installed tab:
 
-- Not installed: install it as the [README][readme] describes under "Pin the
-  plugin for the repository", install command and scope note, then "Confirm the
-  install".
+- Not installed: run the install command Claude Code shows, as the
+  [README][readme] describes under "Pin the plugin for the repository".
 - Another version, or the pinned version from a registration without a tag
   (`claude plugin marketplace list --json` shows a `ref` only for a pinned one):
-  the checked-in `ref` does not move an existing registration. Take steps 1 to 3
-  of the README's "Move the pin to a new release" with the pinned tag as the new
-  tag; an untagged registration already at the pinned version number takes step
-  2's uninstall-and-install route.
+  the checked-in `ref` does not move an existing registration. Re-register,
+  update, and reload as the README's "Move the pin to a new release" describes,
+  with the pinned tag as the new tag; an untagged registration already at the
+  pinned version number is not moved by an update, so uninstall and install it
+  instead.
 - The pinned version from a pinned registration: done.
 
 A registration you make yourself is recorded outside this repository and
