@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.5.1] - 2026-09-14
+
+### Documentation
+
+- Document testing plugin changes with `--plugin-dir` ([#16](https://github.com/TaiSakuma/reviewed-writer/pull/16))
+- Shorten `README.md` and require Claude Code 2.1.269 ([#17](https://github.com/TaiSakuma/reviewed-writer/pull/17))
+
+### Build & CI
+
+- Drop the removed README commands from the bump-version sweep ([#18](https://github.com/TaiSakuma/reviewed-writer/pull/18))
+
+
 ## [0.5.0] - 2026-09-13
 
 ### Refactoring
