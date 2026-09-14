@@ -47,7 +47,7 @@ since `main`'s pin must not move to an older version.
 
    - `.claude/settings.json` — the pin's `ref` value.
    - `README.md` — every literal of the current version (grep for it): the pin
-     example's `ref`, the `@v<old>` commands, and the Versioning examples.
+     example's `ref` and the Versioning examples.
    - `CONTRIBUTING.md` — the "as this is written" value in the plugin-install
      section.
 
