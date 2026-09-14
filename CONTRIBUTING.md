@@ -1,8 +1,8 @@
 # Contributing
 
-Contributors need the Setup and PR Title Convention sections; installing the
-plugin that authors these documents is optional; everything under Releasing is
-the maintainers' runbook.
+Contributors need the Setup and PR Title Convention sections; the two sections
+about the plugin that authors these documents are optional; everything under
+Releasing is the maintainers' runbook.
 
 ## 🔧 Setup
 
@@ -74,13 +74,13 @@ The pin is checked in; `.claude/settings.json` names the tag (`v0.5.0` as this
 is written). With the folder trusted, run `/plugin` in a session here and find
 `reviewed-writer@reviewed-writer` in the Installed tab:
 
-- Not installed: install it as the [README][readme] describes under Pin the
-  plugin for the repository, install command and scope note, then Confirm the
-  install.
+- Not installed: install it as the [README][readme] describes under "Pin the
+  plugin for the repository", install command and scope note, then "Confirm the
+  install".
 - Another version, or the pinned version from a registration without a tag
   (`claude plugin marketplace list --json` shows a `ref` only for a pinned one):
   the checked-in `ref` does not move an existing registration. Take steps 1 to 3
-  of the README's Move the pin to a new release with the pinned tag as the new
+  of the README's "Move the pin to a new release" with the pinned tag as the new
   tag; an untagged registration already at the pinned version number takes step
   2's uninstall-and-install route.
 - The pinned version from a pinned registration: done.
@@ -90,14 +90,59 @@ replaces the machine's `reviewed-writer` source. If you run the plugin elsewhere
 at another tag, re-add that tag, update, and reload there when you are done
 here.
 
-A run uses the installed copy, not the working tree: an edit to `skills/`,
-`agents/`, or `templates/` reaches a run only after a release and the three
-steps above on your machine; the wrappers under `.claude/skills/` are read from
-the tree without a release.
+A session started without `--plugin-dir` runs the installed copy, not the
+working tree: an edit to `skills/`, `agents/`, or `templates/` reaches that
+session only after a release and the cases above on your machine. To start a
+session against the working tree instead, see "Test a plugin change before
+releasing it" below. The wrappers under `.claude/skills/` are read from the tree
+without a release.
 
 If `/write-docs` or `/review-docs` fails with an unknown-skill error naming
 `reviewed-writer:write-doc` or `reviewed-writer:persona-review`, the plugin is
-not loaded: run `/reload-plugins`, or go through the cases above.
+not loaded: run `/reload-plugins`, or go through the cases above. If the session
+was started with `--plugin-dir`, check that flag first, as the next section
+describes.
+
+## 🔧 Test a plugin change before releasing it
+
+To run `/write-docs` or `/review-docs` against an edit to `skills/`, `agents/`,
+or `templates/` that is not released yet, load the plugin from the working tree
+when you start the session:
+
+```bash
+claude --plugin-dir .   # run from the repository root
+```
+
+`.` is the plugin's own directory here, since `.claude-plugin/plugin.json` sits
+at the repository root. The flag needs no prior install and no `enabledPlugins`
+entry, and it changes nothing on disk. The directory copy takes precedence over
+the installed `reviewed-writer`, so `/write-docs` and `/review-docs` drive the
+working tree's `reviewed-writer:write-doc`, `reviewed-writer:persona-review`,
+and the agents they launch — the run exercises the working tree's machinery, not
+the pinned release's.
+
+A path that is not a plugin directory does not fail the session; it falls back
+to the installed copy. Confirm what the flag resolves to before trusting a run:
+
+```bash
+claude --plugin-dir . plugin details reviewed-writer   # from the repository root
+```
+
+The `Source:` line names the copy: `reviewed-writer@inline` for the directory
+you passed, `reviewed-writer@reviewed-writer` for the installed one. The
+installed one indicates that the flag was left off or that its path is not a
+plugin directory: start the session again from the repository root, or pass the
+path to it. `Plugin "reviewed-writer" not found.` is the third outcome: the flag
+did not resolve, as above, and no installed copy is enabled for the current
+directory. Outside the repository the project-scoped install is disabled, so the
+same fix applies; from the repository root the line indicates no enabled install
+to fall back to, and a session started without the flag fails with the
+unknown-skill error above.
+
+`--plugin-dir` is read when the session starts and holds for that session alone:
+a running session cannot be switched over, and the next session started without
+it runs whichever copy "Install the plugin that authors these documents" left
+installed.
 
 ## Releasing
 
