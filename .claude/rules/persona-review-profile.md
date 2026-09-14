@@ -98,6 +98,8 @@ removed, reclassified) in the run report.
   never a review-round outcome. The declaration is the fixed point a round
   reviews against; reviewer remedies move content, not declarations.
 - This repository consumes its own plugin pinned at a release in
-  `.claude/settings.json`: reviews run with the pinned version's machinery, and
-  skill-contract changes in the working tree reach reviews only after a release
-  and a new pin.
+  `.claude/settings.json`: a session started without `--plugin-dir` reviews with
+  the pinned version's machinery, so skill-contract changes in the working tree
+  reach it only after a release and a new pin. A session started with
+  `claude --plugin-dir .` reviews with the working tree instead
+  (CONTRIBUTING.md, "Test a plugin change before releasing it").
