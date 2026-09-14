@@ -57,7 +57,7 @@ one version, or to the rolling `latest` tag:
       "source": {
         "source": "github",
         "repo": "TaiSakuma/reviewed-writer",
-        "ref": "v0.5.0"
+        "ref": "v0.5.1"
       }
     }
   },
@@ -146,9 +146,9 @@ directory][own-claude-dir] in the source tree, [legendary-octo-happiness], and
 
 ## 📋 Versioning
 
-Releases are tagged `v<version>` (for example `v0.5.0`), and
-`.claude-plugin/plugin.json` carries the matching version (`0.5.0`). The
-`u<version>` tags on the repository (for example `u0.5.0`) are CI triggers, not
+Releases are tagged `v<version>` (for example `v0.5.1`), and
+`.claude-plugin/plugin.json` carries the matching version (`0.5.1`). The
+`u<version>` tags on the repository (for example `u0.5.1`) are CI triggers, not
 pin targets. The rolling `latest` tag points at the highest released version.
 The release runbook and the PR-title convention are in
 [CONTRIBUTING.md][contributing], under Releasing and PR Title Convention; the
