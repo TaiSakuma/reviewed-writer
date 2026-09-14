@@ -24,6 +24,8 @@ to the documents' prose, not to code, manifests, or commit messages.
   not hedging; do not upgrade uncertain claims to fact.
 - Spell out each acronym on first use, except those the audience knows better as
   the short form (URL, API, CI, PR).
+- Prefer the shortest text at equal clarity: cut words, sentences, and detail
+  the reader can infer, but never below what an unambiguous reading needs.
 - Explain ideas in your own words rather than lightly rewording a source; put
   reused external wording in quotation marks, attribute it, and link the source.
   Verbatim reproduction is correct where exact wording is the point — commands,
